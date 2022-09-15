@@ -19,6 +19,10 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -379,12 +383,33 @@ public final class Neo4jMappingContext extends AbstractMappingContext<Neo4jPersi
 		this.beanFactory = applicationContext.getAutowireCapableBeanFactory();
 	}
 
-	public CreateRelationshipStatementHolder createStatement(Neo4jPersistentEntity<?> neo4jPersistentEntity,
-															 NestedRelationshipContext relationshipContext,
-															 Object relatedValue,
-															 boolean isNewRelationship) {
+	public CreateRelationshipStatementHolder createStatementForImperativeSimpleRelationshipBatch(Neo4jPersistentEntity<?> neo4jPersistentEntity,
+			 RelationshipDescription relationshipDescription,
+			 List<Object> plainRelationshipRows) {
 
-		if (relationshipContext.hasRelationshipWithProperties()) {
+		return createStatementForSingleRelationship(neo4jPersistentEntity, (DefaultRelationshipDescription) relationshipDescription,
+				plainRelationshipRows);
+	}
+
+	public CreateRelationshipStatementHolder createStatementForImperativeRelationshipsWithPropertiesBatch(boolean isNew,
+		  Neo4jPersistentEntity<?> neo4jPersistentEntity,
+		  RelationshipDescription relationshipDescription,
+		  Object relatedValues,
+		  List<Map<String, Object>> relationshipPropertiesRows) {
+
+		List<MappingSupport.RelationshipPropertiesWithEntityHolder> relationshipPropertyValues = ((Collection<?>) relatedValues).stream()
+				.map(MappingSupport.RelationshipPropertiesWithEntityHolder.class::cast).collect(Collectors.toList());
+
+		return createStatementForRelationshipWithPropertiesBatch(isNew, neo4jPersistentEntity, relationshipDescription,
+				relationshipPropertyValues, relationshipPropertiesRows);
+	}
+
+	public CreateRelationshipStatementHolder createStatementForSingleRelationship(Neo4jPersistentEntity<?> neo4jPersistentEntity,
+																				  RelationshipDescription relationshipContext,
+																				  Object relatedValue,
+																				  boolean isNewRelationship) {
+
+		if (relationshipContext.hasRelationshipProperties()) {
 			MappingSupport.RelationshipPropertiesWithEntityHolder relatedValueEntityHolder =
 					(MappingSupport.RelationshipPropertiesWithEntityHolder) (
 							// either this is a scalar entity holder value
@@ -398,26 +423,32 @@ public final class Neo4jMappingContext extends AbstractMappingContext<Neo4jPersi
 									: ((Map.Entry<?, ?>) relatedValue).getValue());
 
 			String dynamicRelationshipType = null;
-			if (relationshipContext.getRelationship().isDynamic()) {
-				TypeInformation<?> keyType = relationshipContext.getInverse().getTypeInformation().getRequiredComponentType();
+			if (relationshipContext.isDynamic()) {
+				Neo4jPersistentProperty inverse = ((DefaultRelationshipDescription) relationshipContext).getInverse();
+				TypeInformation<?> keyType = inverse.getTypeInformation()
+						.getRequiredComponentType();
 				Object key = ((Map.Entry) relatedValue).getKey();
-				dynamicRelationshipType = conversionService.writeValue(key, keyType, relationshipContext.getInverse().getOptionalConverter()).asString();
+				dynamicRelationshipType = conversionService.writeValue(key, keyType,
+						inverse.getOptionalConverter()).asString();
 			}
-			return createStatementForRelationShipWithProperties(
+			return createStatementForRelationshipWithProperties(
 					neo4jPersistentEntity, relationshipContext,
 					dynamicRelationshipType, relatedValueEntityHolder, isNewRelationship
 			);
 		} else {
-			return createStatementForRelationshipWithoutProperties(neo4jPersistentEntity, relationshipContext, relatedValue);
+			return createStatementForSingleRelationship(neo4jPersistentEntity, (DefaultRelationshipDescription) relationshipContext,
+					relatedValue);
 		}
 	}
 
-	private CreateRelationshipStatementHolder createStatementForRelationShipWithProperties(Neo4jPersistentEntity<?> neo4jPersistentEntity,
-			NestedRelationshipContext relationshipContext, @Nullable String dynamicRelationshipType,
-		    MappingSupport.RelationshipPropertiesWithEntityHolder relatedValue, boolean isNewRelationship) {
+	private CreateRelationshipStatementHolder createStatementForRelationshipWithProperties(
+			Neo4jPersistentEntity<?> neo4jPersistentEntity,
+			RelationshipDescription relationshipDescription, @Nullable String dynamicRelationshipType,
+			MappingSupport.RelationshipPropertiesWithEntityHolder relatedValue, boolean isNewRelationship) {
 
 		Statement relationshipCreationQuery = CypherGenerator.INSTANCE.prepareSaveOfRelationshipWithProperties(
-						neo4jPersistentEntity, relationshipContext.getRelationship(), isNewRelationship, dynamicRelationshipType);
+				neo4jPersistentEntity, relationshipDescription, isNewRelationship,
+				dynamicRelationshipType);
 
 		Map<String, Object> propMap = new HashMap<>();
 		// write relationship properties
@@ -426,22 +457,46 @@ public final class Neo4jMappingContext extends AbstractMappingContext<Neo4jPersi
 		return new CreateRelationshipStatementHolder(relationshipCreationQuery, propMap);
 	}
 
-	private CreateRelationshipStatementHolder createStatementForRelationshipWithoutProperties(
+	private CreateRelationshipStatementHolder createStatementForRelationshipWithPropertiesBatch(
+			boolean isNew,
 			Neo4jPersistentEntity<?> neo4jPersistentEntity,
-			NestedRelationshipContext relationshipContext, Object relatedValue) {
+			RelationshipDescription relationshipDescription,
+			List<MappingSupport.RelationshipPropertiesWithEntityHolder> relatedValues,
+			List<Map<String, Object>> relationshipPropertiesRows) {
+
+		Statement relationshipCreationQuery = CypherGenerator.INSTANCE
+				.prepareUpdateOfRelationshipsWithProperties(neo4jPersistentEntity, relationshipDescription, isNew);
+		List<Object> relationshipRows = new ArrayList<>();
+		Map<String, Object> relationshipPropertiesEntries = new HashMap<>();
+		if (isNew) {
+			for (int i = 0; i < relatedValues.size(); i++) {
+				MappingSupport.RelationshipPropertiesWithEntityHolder relatedValue = relatedValues.get(i);
+				// write relationship properties
+				Map<String, Object> propMap = relationshipPropertiesRows.get(i);
+				getEntityConverter().write(relatedValue.getRelationshipProperties(), propMap);
+				relationshipRows.add(propMap);
+			}
+			relationshipPropertiesEntries.put(Constants.NAME_OF_RELATIONSHIP_LIST_PARAM, relationshipRows);
+		}
+		return new CreateRelationshipStatementHolder(relationshipCreationQuery, relationshipPropertiesEntries);
+	}
+
+	private CreateRelationshipStatementHolder createStatementForSingleRelationship(
+			Neo4jPersistentEntity<?> neo4jPersistentEntity,
+			DefaultRelationshipDescription relationshipDescription, Object relatedValue) {
 
 		String relationshipType;
-		if (!relationshipContext.getRelationship().isDynamic()) {
+		if (!relationshipDescription.isDynamic()) {
 			relationshipType = null;
 		} else {
-			Neo4jPersistentProperty inverse = relationshipContext.getInverse();
+			Neo4jPersistentProperty inverse = relationshipDescription.getInverse();
 			TypeInformation<?> keyType = inverse.getTypeInformation().getRequiredComponentType();
 			Object key = ((Map.Entry<?, ?>) relatedValue).getKey();
 			relationshipType = conversionService.writeValue(key, keyType, inverse.getOptionalConverter()).asString();
 		}
 
-		Statement relationshipCreationQuery = CypherGenerator.INSTANCE.prepareSaveOfRelationship(
-				neo4jPersistentEntity, relationshipContext.getRelationship(), relationshipType);
-		return new CreateRelationshipStatementHolder(relationshipCreationQuery);
+		Statement relationshipCreationQuery = CypherGenerator.INSTANCE.prepareSaveOfRelationships(
+				neo4jPersistentEntity, relationshipDescription, relationshipType);
+		return new CreateRelationshipStatementHolder(relationshipCreationQuery, Collections.emptyMap());
 	}
 }
