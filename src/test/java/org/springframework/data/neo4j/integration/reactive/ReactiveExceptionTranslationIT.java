@@ -15,6 +15,7 @@
  */
 package org.springframework.data.neo4j.integration.reactive;
 
+import org.junit.jupiter.api.Disabled;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -97,6 +98,7 @@ class ReactiveExceptionTranslationIT {
 	}
 
 	@Test
+	@Disabled
 	void exceptionsFromRepositoriesShouldBeTranslated(@Autowired SimplePersonRepository repository) {
 		repository.save(new SimplePerson("Tom")).then().as(StepVerifier::create).verifyComplete();
 

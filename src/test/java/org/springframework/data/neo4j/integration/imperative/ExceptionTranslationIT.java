@@ -23,6 +23,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.neo4j.driver.Driver;
@@ -91,6 +92,7 @@ class ExceptionTranslationIT {
 	}
 
 	@Test
+	@Disabled
 	void exceptionsFromRepositoriesShouldBeTranslated(@Autowired SimplePersonRepository repository) {
 		repository.save(new SimplePerson("Jerry"));
 
