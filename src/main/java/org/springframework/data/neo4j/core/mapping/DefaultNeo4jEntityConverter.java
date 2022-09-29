@@ -32,7 +32,6 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import org.neo4j.driver.Value;
@@ -61,7 +60,6 @@ import org.springframework.data.util.TypeInformation;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
-import org.springframework.util.CollectionUtils;
 
 /**
  * @author Michael J. Simons
@@ -553,7 +551,7 @@ final class DefaultNeo4jEntityConverter implements Neo4jEntityConverter {
 								if (dings.hasRelationshipProperties()) {
 									Object existingIdPropertyValue = ((Neo4jPersistentEntity<?>) dings.getRelationshipPropertiesEntity()).getPropertyAccessor(existingValueInCollection).getProperty(((Neo4jPersistentEntity<?>) dings.getRelationshipPropertiesEntity()).getIdProperty());
 									mergedValues.put(existingIdPropertyValue, existingValueInCollection);
-								} else if (!dings.isDynamic()){ // should not happen because this is all inside populatedCollection (but better safe than sorry)
+								} else if (!dings.isDynamic()) { // should not happen because this is all inside populatedCollection (but better safe than sorry)
 									Object existingIdPropertyValue = ((Neo4jPersistentEntity<?>) dings.getTarget()).getPropertyAccessor(existingValueInCollection).getProperty(((Neo4jPersistentEntity<?>) dings.getTarget()).getIdProperty());
 									mergedValues.put(existingIdPropertyValue, existingValueInCollection);
 								}
@@ -562,7 +560,7 @@ final class DefaultNeo4jEntityConverter implements Neo4jEntityConverter {
 								if (dings.hasRelationshipProperties()) {
 									Object existingIdPropertyValue = ((Neo4jPersistentEntity<?>) dings.getRelationshipPropertiesEntity()).getPropertyAccessor(providedValueInCollection).getProperty(((Neo4jPersistentEntity<?>) dings.getRelationshipPropertiesEntity()).getIdProperty());
 									mergedValues.put(existingIdPropertyValue, providedValueInCollection);
-								} else if (!dings.isDynamic()){ // should not happen because this is all inside populatedCollection (but better safe than sorry)
+								} else if (!dings.isDynamic()) { // should not happen because this is all inside populatedCollection (but better safe than sorry)
 									Object existingIdPropertyValue = ((Neo4jPersistentEntity<?>) dings.getTarget()).getPropertyAccessor(providedValueInCollection).getProperty(((Neo4jPersistentEntity<?>) dings.getTarget()).getIdProperty());
 									mergedValues.put(existingIdPropertyValue, providedValueInCollection);
 								}
