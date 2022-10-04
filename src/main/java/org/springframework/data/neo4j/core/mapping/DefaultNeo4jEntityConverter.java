@@ -539,7 +539,7 @@ final class DefaultNeo4jEntityConverter implements Neo4jEntityConverter {
 					&& propertyValueNotNull;
 
 			if (populatedCollection) {
-				createInstanceOfRelationships(persistentProperty, queryResult, (RelationshipDescription) association, baseDescription, relationshipsFromResult, nodesFromResult)
+				createInstanceOfRelationships(persistentProperty, queryResult, (RelationshipDescription) association, baseDescription, relationshipsFromResult, nodesFromResult, false)
 						.ifPresent(value -> {
 							Collection<?> providedCollection = (Collection<?>) value;
 							Collection<?> existingValue = (Collection<?>) propertyValue;
@@ -587,8 +587,14 @@ final class DefaultNeo4jEntityConverter implements Neo4jEntityConverter {
 	}
 
 	private Optional<Object> createInstanceOfRelationships(Neo4jPersistentProperty persistentProperty, MapAccessor values,
+														   RelationshipDescription relationshipDescription, NodeDescription<?> baseDescription, Collection<Relationship> relationshipsFromResult,
+														   Collection<Node> nodesFromResult) {
+		return createInstanceOfRelationships(persistentProperty, values, relationshipDescription, baseDescription, relationshipsFromResult, nodesFromResult, true);
+	}
+
+	private Optional<Object> createInstanceOfRelationships(Neo4jPersistentProperty persistentProperty, MapAccessor values,
 		   RelationshipDescription relationshipDescription, NodeDescription<?> baseDescription, Collection<Relationship> relationshipsFromResult,
-		   Collection<Node> nodesFromResult) {
+		   Collection<Node> nodesFromResult, boolean fetchMore) {
 
 		String typeOfRelationship = relationshipDescription.getType();
 		String targetLabel = relationshipDescription.getTarget().getPrimaryLabel();
@@ -663,14 +669,16 @@ final class DefaultNeo4jEntityConverter implements Neo4jEntityConverter {
 						// the property population of _this_ object.
 						// The initial population will happen at the end of this mapping. This is sufficient because
 						// it only affects properties not changing the instance of the object.
-						Object mappedObject = sourceNodeId != null && sourceNodeId.equals(targetNodeId)
-								? knownObjects.getObject(sourceNodeId)
-								: map(possibleValueNode, concreteTargetNodeDescription, null, relationshipsFromResult, nodesFromResult);
+						Object mappedObject = fetchMore
+								? sourceNodeId != null && sourceNodeId.equals(targetNodeId)
+									? knownObjects.getObject(sourceNodeId)
+									: map(possibleValueNode, concreteTargetNodeDescription, null, relationshipsFromResult, nodesFromResult)
+								: knownObjects.getObject(targetNodeId);
 						if (relationshipDescription.hasRelationshipProperties()) {
 
-							Object relationshipProperties = map(possibleRelationship,
-									(Neo4jPersistentEntity<?>) relationshipDescription.getRelationshipPropertiesEntity(),
-									mappedObject, relationshipsFromResult, nodesFromResult);
+							Object relationshipProperties = fetchMore
+									? map(possibleRelationship, (Neo4jPersistentEntity<?>) relationshipDescription.getRelationshipPropertiesEntity(), mappedObject, relationshipsFromResult, nodesFromResult)
+									: knownObjects.getObject(getInternalId(possibleRelationship));
 							relationshipsAndProperties.add(relationshipProperties);
 							mappedObjectHandler.accept(possibleRelationship.type(), relationshipProperties);
 						} else {
@@ -687,7 +695,9 @@ final class DefaultNeo4jEntityConverter implements Neo4jEntityConverter {
 				Neo4jPersistentEntity<?> concreteTargetNodeDescription =
 						getMostConcreteTargetNodeDescription(genericTargetNodeDescription, relatedEntity);
 
-				Object valueEntry = map(relatedEntity, concreteTargetNodeDescription, null, relationshipsFromResult, nodesFromResult);
+				Object valueEntry = fetchMore
+						? map(relatedEntity, concreteTargetNodeDescription, null, relationshipsFromResult, nodesFromResult)
+						: knownObjects.getObject(getInternalId(relatedEntity));
 
 				if (relationshipDescription.hasRelationshipProperties()) {
 					String sourceLabel = relationshipDescription.getSource().getMostAbstractParentLabel(baseDescription);
@@ -696,9 +706,10 @@ final class DefaultNeo4jEntityConverter implements Neo4jEntityConverter {
 					Relationship relatedEntityRelationship = relatedEntity.get(relationshipSymbolicName)
 							.asRelationship();
 
-					Object relationshipProperties = map(relatedEntityRelationship,
-							(Neo4jPersistentEntity<?>) relationshipDescription.getRelationshipPropertiesEntity(),
-							valueEntry, relationshipsFromResult, nodesFromResult);
+					Object relationshipProperties = fetchMore
+							? map(relatedEntityRelationship, (Neo4jPersistentEntity<?>) relationshipDescription.getRelationshipPropertiesEntity(), valueEntry, relationshipsFromResult, nodesFromResult)
+							: knownObjects.getObject(getInternalId(relatedEntityRelationship));
+
 					relationshipsAndProperties.add(relationshipProperties);
 					mappedObjectHandler.accept(relatedEntity.get(RelationshipDescription.NAME_OF_RELATIONSHIP_TYPE).asString(), relationshipProperties);
 				} else {
