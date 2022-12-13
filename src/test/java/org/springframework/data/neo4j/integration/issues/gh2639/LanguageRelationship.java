@@ -15,13 +15,26 @@
  */
 package org.springframework.data.neo4j.integration.issues.gh2639;
 
-import org.springframework.data.neo4j.repository.Neo4jRepository;
+import org.springframework.data.neo4j.core.schema.RelationshipId;
+import org.springframework.data.neo4j.core.schema.RelationshipProperties;
+import org.springframework.data.neo4j.core.schema.TargetNode;
 
 /**
- * Fetch the root node by name.
+ * @author Gerrit Meier
  */
-public interface CompanyRepository extends Neo4jRepository<Company, Long> {
+@RelationshipProperties
+public class LanguageRelationship {
 
-	Company findByName(String name);
+	@RelationshipId
+	private Long id;
 
+	private final int score;
+
+	@TargetNode
+	private final Language language;
+
+	public LanguageRelationship(int score, Language language) {
+		this.score = score;
+		this.language = language;
+	}
 }

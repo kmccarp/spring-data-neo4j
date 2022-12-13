@@ -774,7 +774,7 @@ final class DefaultNeo4jEntityConverter implements Neo4jEntityConverter {
 				}
 
 				if (relationshipDescription.hasRelationshipProperties()) {
-					String sourceLabel = relationshipDescription.getSource().getMostAbstractParentLabel(baseDescription);
+					String sourceLabel = relationshipDescription.getSource().getMostAbstractParentLabel(genericNodeDescription);
 					String relationshipSymbolicName = sourceLabel
 													  + RelationshipDescription.NAME_OF_RELATIONSHIP + targetLabel;
 					Relationship relatedEntityRelationship = relatedEntity.get(relationshipSymbolicName)

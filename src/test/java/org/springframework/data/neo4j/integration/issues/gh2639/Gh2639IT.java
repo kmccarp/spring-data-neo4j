@@ -1,7 +1,24 @@
+/*
+ * Copyright 2011-2022 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.springframework.data.neo4j.integration.issues.gh2639;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.neo4j.driver.Driver;
+import org.neo4j.driver.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +34,7 @@ import org.springframework.data.neo4j.test.Neo4jIntegrationTest;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -25,12 +43,22 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
+ * Test to verify that relationships within generic entity based relationships work.
+ *
  * @author Gerrit Meier
  */
 @Neo4jIntegrationTest
 public class Gh2639IT {
 
 	protected static Neo4jExtension.Neo4jConnectionSupport neo4jConnectionSupport;
+
+	@BeforeAll
+	static void setup(@Autowired Driver driver, @Autowired BookmarkCapture bookmarkCapture) {
+		try (Session session = driver.session(bookmarkCapture.createSessionConfig())) {
+			session.run("MATCH (n) detach delete n").consume();
+			bookmarkCapture.seedWith(session.lastBookmark());
+		}
+	}
 
 	@Test
 	void relationshipsOfGenericRelationshipsGetResolvedCorrectly(@Autowired CompanyRepository companyRepository) {
@@ -41,10 +69,14 @@ public class Gh2639IT {
 		// devs
 		Language java = new Language("java", "1.5");
 		Language perl = new Language("perl", "6.0");
-		List<Language> languages = new java.util.ArrayList<>();
-		languages.add(java);
-		languages.add(perl);
-		Developer harry = new Developer("Harry", languages);
+
+		List<LanguageRelationship> languageRelationships = new ArrayList<>();
+		LanguageRelationship javaRelationship = new LanguageRelationship(5, java);
+		LanguageRelationship perlRelationship = new LanguageRelationship(2, perl);
+		languageRelationships.add(javaRelationship);
+		languageRelationships.add(perlRelationship);
+
+		Developer harry = new Developer("Harry", languageRelationships);
 
 		// setup and save the company
 		List<Person> team = Arrays.asList(
