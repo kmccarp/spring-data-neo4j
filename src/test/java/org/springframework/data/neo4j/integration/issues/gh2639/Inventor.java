@@ -15,48 +15,19 @@
  */
 package org.springframework.data.neo4j.integration.issues.gh2639;
 
-import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
-import org.springframework.data.neo4j.core.schema.Relationship;
-
-import java.util.StringJoiner;
 
 /**
- * Programming language to represent.
- * Only available at the Developer entity.
+ * @author Gerrit Meier
  */
 @Node
-public class Language {
+public abstract class Inventor {
 
 	@Id
-	@GeneratedValue
-	private Long id;
-	private final String name;
-	private final String version;
+	final String name;
 
-	@Relationship("INVENTED_BY")
-	Inventor inventor;
-
-	public Language(String name, String version) {
+	public Inventor(String name) {
 		this.name = name;
-		this.version = version;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public String getVersion() {
-		return version;
-	}
-
-	@Override
-	public String toString() {
-		return new StringJoiner(", ", Language.class.getSimpleName() + "[", "]")
-				.add("id=" + id)
-				.add("name='" + name + "'")
-				.add("version='" + version + "'")
-				.toString();
 	}
 }

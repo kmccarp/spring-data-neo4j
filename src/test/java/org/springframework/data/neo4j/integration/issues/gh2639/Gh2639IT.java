@@ -66,9 +66,10 @@ public class Gh2639IT {
 		Person roy = new Sales("Roy");
 		Person craig = new Sales("Craig");
 
-		// devs
 		Language java = new Language("java", "1.5");
+		java.inventor = new Enterprise("Sun", ";(");
 		Language perl = new Language("perl", "6.0");
+		perl.inventor = new Individual("Larry Wall", "larryW");
 
 		List<LanguageRelationship> languageRelationships = new ArrayList<>();
 		LanguageRelationship javaRelationship = new LanguageRelationship(5, java);
@@ -77,29 +78,30 @@ public class Gh2639IT {
 		languageRelationships.add(perlRelationship);
 
 		Developer harry = new Developer("Harry", languageRelationships);
-
-		// setup and save the company
-		List<Person> team = Arrays.asList(
-					greg,
-					roy,
-					craig,
-				harry);
+		List<Person> team = Arrays.asList(greg,	roy, craig,	harry);
 		Company acme = new Company("ACME", team);
 		companyRepository.save(acme);
 
-
-		// read company from db
 		Company loadedAcme = companyRepository.findByName("ACME");
 
-		// find Harry...
 		Developer loadedHarry = loadedAcme.getEmployees().stream()
 				.filter(e -> e instanceof Developer)
 				.map(e -> (Developer) e)
 				.filter(developer -> developer.getName().equals("Harry"))
 				.findFirst().get();
 
-		// ... and check for harry's programming skills
-		assertThat(loadedHarry.getProgrammingLanguages()).isNotEmpty();
+		List<LanguageRelationship> programmingLanguages = loadedHarry.getProgrammingLanguages();
+		assertThat(programmingLanguages)
+				.isNotEmpty()
+				.extracting("score")
+				.containsExactlyInAnyOrder(5, 2);
+
+		assertThat(programmingLanguages)
+				.extracting("language")
+				.extracting("inventor")
+				.containsExactlyInAnyOrder(
+						new Individual("Larry Wall", "larryW"), new Enterprise("Sun", ";(")
+				);
 	}
 
 	interface CompanyRepository extends Neo4jRepository<Company, Long> {
@@ -132,7 +134,6 @@ public class Gh2639IT {
 
 		@Bean
 		public Driver driver() {
-
 			return neo4jConnectionSupport.getDriver();
 		}
 
