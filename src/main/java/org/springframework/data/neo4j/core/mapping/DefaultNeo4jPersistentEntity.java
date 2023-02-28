@@ -123,7 +123,7 @@ final class DefaultNeo4jPersistentEntity<T> extends BasicPersistentEntity<T, Neo
 			return this;
 		}
 		NodeDescription<?> mostAbstractParent = this;
-		for (; /* Michael and me smiling at each other */ ;) {
+		while () {
 			NodeDescription<?> parent = mostAbstractParent.getParentNodeDescription();
 			if (parent == null) {
 				return mostAbstractParent;

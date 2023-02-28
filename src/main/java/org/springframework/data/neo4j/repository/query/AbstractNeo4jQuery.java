@@ -80,7 +80,7 @@ abstract class AbstractNeo4jQuery extends Neo4jQuerySupport implements Repositor
 	@Override
 	public final Object execute(Object[] parameters) {
 
-		boolean incrementLimit = queryMethod.isSliceQuery() && !queryMethod.getQueryAnnotation().map(q -> q.countQuery()).filter(StringUtils::hasText).isPresent();
+		boolean incrementLimit = queryMethod.isSliceQuery() && !queryMethod.getQueryAnnotation().map(Query::countQuery).filter(StringUtils::hasText).isPresent();
 		Neo4jParameterAccessor parameterAccessor = new Neo4jParameterAccessor(
 				(Neo4jQueryMethod.Neo4jParameters) this.queryMethod.getParameters(),
 				parameters);

@@ -419,7 +419,7 @@ class ReactiveNeo4jClientTest {
 			Flux<Neo4jClientTest.BikeOwner> bikeOwners = client.query(cypher).bind("michael").to("name")
 					.fetchAs(Neo4jClientTest.BikeOwner.class).mappedBy(mappingFunction).all();
 
-			StepVerifier.create(bikeOwners).expectNextMatches(o -> o.getName().equals("michael")).verifyComplete();
+			StepVerifier.create(bikeOwners).expectNextMatches(o -> "michael".equals(o.getName())).verifyComplete();
 
 			verifyDatabaseSelection(null);
 

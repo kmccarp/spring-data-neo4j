@@ -447,46 +447,41 @@ final class DefaultNeo4jEntityConverter implements Neo4jEntityConverter {
 			Collection<String> surplusLabels, @Nullable Object lastMappedEntity,
 			Collection<Relationship> relationshipsFromResult, Collection<Node> nodesFromResult) {
 
-		ParameterValueProvider<Neo4jPersistentProperty> parameterValueProvider = new ParameterValueProvider<Neo4jPersistentProperty>() {
+		ParameterValueProvider<Neo4jPersistentProperty> parameterValueProvider = parameter -> {
+			Neo4jPersistentProperty matchingProperty = nodeDescription.getRequiredPersistentProperty(parameter.getName());
 
-			@SuppressWarnings("unchecked") // Needed for the last cast. It's easier that way than using the parameter type info and checking for primitives
-			@Override
-			public <T> T getParameterValue(Parameter<T, Neo4jPersistentProperty> parameter) {
-				Neo4jPersistentProperty matchingProperty = nodeDescription.getRequiredPersistentProperty(parameter.getName());
-
-				Object result;
-				if (matchingProperty.isRelationship()) {
-					RelationshipDescription relationshipDescription = nodeDescription.getRelationships().stream()
-							.filter(r -> {
-								String propertyFieldName = matchingProperty.getFieldName();
-								return r.getFieldName().equals(propertyFieldName);
-							}).findFirst().get();
-					// If we cannot find any value it does not mean that there isn't any.
-					// The result set might contain associations not named CONCRETE_TYPE_TARGET but ABSTRACT_TYPE_TARGET.
-					// For this we bubble up the hierarchy of NodeDescriptions.
-					result = createInstanceOfRelationships(matchingProperty, values, relationshipDescription, nodeDescription, genericNodeDescription, relationshipsFromResult, nodesFromResult)
-							.orElseGet(() -> {
-								NodeDescription<?> parentNodeDescription = nodeDescription.getParentNodeDescription();
-								T resultValue = null;
-								while (parentNodeDescription != null) {
-									Optional<Object> value = createInstanceOfRelationships(matchingProperty, values, relationshipDescription, parentNodeDescription, parentNodeDescription, relationshipsFromResult, nodesFromResult);
-									if (value.isPresent()) {
-										resultValue = (T) value.get();
-										break;
-									}
-									parentNodeDescription = parentNodeDescription.getParentNodeDescription();
+			Object result;
+			if (matchingProperty.isRelationship()) {
+				RelationshipDescription relationshipDescription = nodeDescription.getRelationships().stream()
+						.filter(r -> {
+							String propertyFieldName = matchingProperty.getFieldName();
+							return r.getFieldName().equals(propertyFieldName);
+						}).findFirst().get();
+				// If we cannot find any value it does not mean that there isn't any.
+				// The result set might contain associations not named CONCRETE_TYPE_TARGET but ABSTRACT_TYPE_TARGET.
+				// For this we bubble up the hierarchy of NodeDescriptions.
+				result = createInstanceOfRelationships(matchingProperty, values, relationshipDescription, nodeDescription, genericNodeDescription, relationshipsFromResult, nodesFromResult)
+						.orElseGet(() -> {
+							NodeDescription<?> parentNodeDescription = nodeDescription.getParentNodeDescription();
+							T resultValue = null;
+							while (parentNodeDescription != null) {
+								Optional<Object> value = createInstanceOfRelationships(matchingProperty, values, relationshipDescription, parentNodeDescription, parentNodeDescription, relationshipsFromResult, nodesFromResult);
+								if (value.isPresent()) {
+									resultValue = (T) value.get();
+									break;
 								}
-								return resultValue;
-							});
-				} else if (matchingProperty.isDynamicLabels()) {
-					result = createDynamicLabelsProperty(matchingProperty.getTypeInformation(), surplusLabels);
-				} else if (matchingProperty.isEntityWithRelationshipProperties()) {
-					result = lastMappedEntity;
-				} else {
-					result =  conversionService.readValue(extractValueOf(matchingProperty, values), parameter.getType(), matchingProperty.getOptionalConverter());
-				}
-				return (T) result;
+								parentNodeDescription = parentNodeDescription.getParentNodeDescription();
+							}
+							return resultValue;
+						});
+			} else if (matchingProperty.isDynamicLabels()) {
+				result = createDynamicLabelsProperty(matchingProperty.getTypeInformation(), surplusLabels);
+			} else if (matchingProperty.isEntityWithRelationshipProperties()) {
+				result = lastMappedEntity;
+			} else {
+				result = conversionService.readValue(extractValueOf(matchingProperty, values), parameter.getType(), matchingProperty.getOptionalConverter());
 			}
+			return (T) result;
 		};
 
 		return entityInstantiators.getInstantiatorFor(nodeDescription).createInstance(nodeDescription, parameterValueProvider);
@@ -665,7 +660,7 @@ final class DefaultNeo4jEntityConverter implements Neo4jEntityConverter {
 			// Retrieve all matching relationships from the result's list(s)
 			Collection<Relationship> allMatchingTypeRelationshipsInResult =
 					extractMatchingRelationships(relationshipsFromResult, relationshipDescription, typeOfRelationship,
-							(possibleRelationship) -> sourceIdSelector.apply(possibleRelationship).equals(sourceNodeId));
+							possibleRelationship -> sourceIdSelector.apply(possibleRelationship).equals(sourceNodeId));
 
 			// Retrieve all nodes from the result's list(s)
 			Collection<Node> allNodesWithMatchingLabelInResult = extractMatchingNodes(nodesFromResult, targetLabel);
@@ -787,7 +782,7 @@ final class DefaultNeo4jEntityConverter implements Neo4jEntityConverter {
 
 	private Collection<Node> extractMatchingNodes(Collection<Node> allNodesInResult, String targetLabel) {
 
-		return labelNodeCache.computeIfAbsent(targetLabel, (label) -> {
+		return labelNodeCache.computeIfAbsent(targetLabel, label -> {
 
 			Predicate<Node> onlyWithMatchingLabels = n -> n.hasLabel(label);
 			return allNodesInResult.stream()

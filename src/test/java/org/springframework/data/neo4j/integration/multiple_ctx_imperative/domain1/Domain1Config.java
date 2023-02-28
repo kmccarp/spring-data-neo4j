@@ -78,7 +78,7 @@ public class Domain1Config {
 
 	@Primary @Bean
 	public DatabaseSelectionProvider domain1Selection() {
-		return () -> DatabaseSelection.undecided();
+		return DatabaseSelection::undecided;
 	}
 
 	@Primary @Bean
