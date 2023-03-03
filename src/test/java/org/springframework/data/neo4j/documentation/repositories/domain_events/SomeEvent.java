@@ -23,7 +23,8 @@ import org.springframework.context.ApplicationEvent;
  * Some example event.
  */
 // tag::domain-events[]
-public class SomeEvent extends ApplicationEvent { // <1>
+public class SomeEvent extends ApplicationEvent {
+	private static final long serialVersionUID = 1; // <1>
 
 	private final LocalDateTime changeHappenedAt = LocalDateTime.now();
 

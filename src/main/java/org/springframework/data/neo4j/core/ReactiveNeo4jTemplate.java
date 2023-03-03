@@ -738,7 +738,7 @@ public final class ReactiveNeo4jTemplate implements
 
 	}
 
-	static class TupleOfLongsHolder {
+	static final class TupleOfLongsHolder {
 		private final Tuple2<Collection<Long>, Collection<Long>> content;
 
 		static TupleOfLongsHolder with(Tuple2<Collection<Long>, Collection<Long>> content) {

@@ -28,7 +28,6 @@ import org.springframework.data.mapping.Parameter;
 import org.springframework.data.mapping.PersistentEntity;
 import org.springframework.data.mapping.PersistentProperty;
 import org.springframework.data.mapping.PersistentPropertyAccessor;
-import org.springframework.data.mapping.model.ParameterValueProvider;
 import org.springframework.data.neo4j.core.convert.Neo4jConversionService;
 import org.springframework.data.neo4j.core.schema.TargetNode;
 import org.springframework.data.util.ReflectionUtils;
@@ -80,17 +79,14 @@ public final class EntityFromDtoInstantiatingConverter<T> implements Converter<O
 
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		T entity = (T) context.getInstantiatorFor(targetEntity)
-				.createInstance(targetEntity, new ParameterValueProvider() {
-					@Override
-					public Object getParameterValue(Parameter parameter) {
-						PersistentProperty<?> targetProperty = targetEntity.getPersistentProperty(parameter.getName());
-						if (targetProperty == null) {
-							throw new MappingException("Cannot map constructor parameter " + parameter.getName()
-													   + " to a property of class " + targetEntityType);
-						}
-						return getPropertyValueFor(targetProperty, sourceEntity, sourceAccessor);
-					}
-				});
+				.createInstance(targetEntity, parameter -> {
+			PersistentProperty<?> targetProperty = targetEntity.getPersistentProperty(parameter.getName());
+			if (targetProperty == null) {
+				throw new MappingException("Cannot map constructor parameter " + parameter.getName()
+						+ " to a property of class " + targetEntityType);
+			}
+			return getPropertyValueFor(targetProperty, sourceEntity, sourceAccessor);
+		});
 
 		PersistentPropertyAccessor<Object> dtoAccessor = targetEntity.getPropertyAccessor(entity);
 		targetEntity.doWithAll(property -> {
