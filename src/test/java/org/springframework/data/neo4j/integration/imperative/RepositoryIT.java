@@ -2790,7 +2790,7 @@ class RepositoryIT {
 
 			Example<PersonWithAllConstructor> example = Example.of(person1,
 					ExampleMatcher.matchingAll().withIgnoreNullValues());
-			PersonWithAllConstructor person = repository.findBy(example, q -> q.oneValue());
+			PersonWithAllConstructor person = repository.findBy(example, FluentQuery.FetchableFluentQuery::oneValue);
 
 			assertThat(person).isNotNull();
 			assertThat(person).isEqualTo(person1);
@@ -2973,7 +2973,7 @@ class RepositoryIT {
 		void existsByExampleFluent(@Autowired PersonRepository repository) {
 
 			Example<PersonWithAllConstructor> example = Example.of(personExample(TEST_PERSON_SAMEVALUE));
-			boolean exists = repository.findBy(example, q -> q.exists());
+			boolean exists = repository.findBy(example, FluentQuery.FetchableFluentQuery::exists);
 
 			assertThat(exists).isTrue();
 		}
@@ -2991,7 +2991,7 @@ class RepositoryIT {
 		void countByExampleFluent(@Autowired PersonRepository repository) {
 
 			Example<PersonWithAllConstructor> example = Example.of(person1);
-			long count = repository.findBy(example, q -> q.count());
+			long count = repository.findBy(example, FluentQuery.FetchableFluentQuery::count);
 
 			assertThat(count).isEqualTo(1);
 		}
@@ -4662,7 +4662,7 @@ class RepositoryIT {
 			extends Neo4jRepository<EntitiesWithDynamicLabels.EntityWithCustomIdAndDynamicLabels, String> {}
 
 	@SpringJUnitConfig(Config.class)
-	static abstract class IntegrationTestBase {
+	abstract static class IntegrationTestBase {
 
 		@Autowired private Driver driver;
 
@@ -4758,12 +4758,12 @@ class RepositoryIT {
 
 		@Override
 		public DatabaseSelectionProvider databaseSelectionProvider() {
-			return () -> databaseSelection.get();
+			return databaseSelection::get;
 		}
 
 		@Bean
 		public UserSelectionProvider getUserSelectionProvider() {
-			return () -> userSelection.get();
+			return userSelection::get;
 		}
 
 		@Override

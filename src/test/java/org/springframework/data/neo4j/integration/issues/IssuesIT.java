@@ -836,8 +836,8 @@ class IssuesIT extends TestBase {
 
 	@Test
 	@Tag("GH-2572")
-	void allShouldFetchCorrectNumberOfChildNodes(@Autowired GH2572Repository GH2572Repository) {
-		List<GH2572Child> dogsForPerson = GH2572Repository.getDogsForPerson("GH2572Parent-2");
+	void allShouldFetchCorrectNumberOfChildNodes(@Autowired GH2572Repository gH2572Repository) {
+		List<GH2572Child> dogsForPerson = gH2572Repository.getDogsForPerson("GH2572Parent-2");
 		assertThat(dogsForPerson).hasSize(2);
 	}
 
@@ -976,9 +976,9 @@ class IssuesIT extends TestBase {
 		Company loadedAcme = companyRepository.findByName("ACME");
 
 		Developer loadedHarry = loadedAcme.getEmployees().stream()
-				.filter(e -> e instanceof Developer)
-				.map(e -> (Developer) e)
-				.filter(developer -> developer.getName().equals("Harry"))
+				.filter(Developer.class::isInstance)
+				.map(Developer.class::cast)
+				.filter(developer -> "Harry".equals(developer.getName()))
 				.findFirst().get();
 
 		List<LanguageRelationship> programmingLanguages = loadedHarry.getProgrammingLanguages();
