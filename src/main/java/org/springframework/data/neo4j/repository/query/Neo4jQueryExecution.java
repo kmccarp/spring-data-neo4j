@@ -20,6 +20,7 @@ import reactor.core.publisher.Mono;
 import org.springframework.data.neo4j.core.Neo4jOperations;
 import org.springframework.data.neo4j.core.PreparedQuery;
 import org.springframework.data.neo4j.core.ReactiveNeo4jOperations;
+import org.springframework.data.neo4j.core.ReactiveNeo4jOperations.ExecutableQuery;
 
 /**
  * Set of classes to contain query execution strategies. Depending (mostly) on the return type of a
@@ -70,9 +71,9 @@ interface Neo4jQueryExecution {
 					neo4jOperations.toExecutableQuery(preparedQuery);
 
 			if (asCollectionQuery) {
-				return executableQuery.flatMapMany(q -> q.getResults());
+				return executableQuery.flatMapMany(ReactiveNeo4jOperations.ExecutableQuery::getResults);
 			} else {
-				return executableQuery.flatMap(q -> q.getSingleResult());
+				return executableQuery.flatMap(ReactiveNeo4jOperations.ExecutableQuery::getSingleResult);
 			}
 		}
 	}

@@ -74,7 +74,7 @@ final class DefaultNeo4jConversionService implements Neo4jConversionService {
 		BiFunction<Value, Class<?>, Object> conversion;
 		boolean applyConversionToCompleteCollection = false;
 		if (conversionOverride == null) {
-			conversion = (v, t) -> conversionService.convert(v, t);
+			conversion = conversionService::convert;
 		} else {
 			applyConversionToCompleteCollection = conversionOverride instanceof NullSafeNeo4jPersistentPropertyConverter
 												  && ((NullSafeNeo4jPersistentPropertyConverter<?>) conversionOverride).isForCollection();
@@ -140,7 +140,7 @@ final class DefaultNeo4jConversionService implements Neo4jConversionService {
 
 		if (isCollection(type) && !applyConversionToCompleteCollection) {
 			Collection<?> sourceCollection = (Collection<?>) value;
-			Object[] targetCollection = (sourceCollection).stream().map(conversion::apply).toArray();
+			Object[] targetCollection = sourceCollection.stream().map(conversion::apply).toArray();
 			return Values.value(targetCollection);
 		}
 

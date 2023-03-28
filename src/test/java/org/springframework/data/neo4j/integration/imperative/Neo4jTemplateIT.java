@@ -346,11 +346,11 @@ class Neo4jTemplateIT {
 
 	private static BiPredicate<PropertyPath, Neo4jPersistentProperty> create2LevelProjectingPredicate() {
 		BiPredicate<PropertyPath, Neo4jPersistentProperty> predicate = (path, property) -> false;
-		predicate = predicate.or((path, property) -> property.getName().equals("lastName"));
-		predicate = predicate.or((path, property) -> property.getName().equals("address")
-													 || path.toDotPath().startsWith("address.") && property.getName().equals("street"));
-		predicate = predicate.or((path, property) -> property.getName().equals("country")
-													 || path.toDotPath().contains("address.country.") && property.getName().equals("name"));
+		predicate = predicate.or((path, property) -> "lastName".equals(property.getName()));
+		predicate = predicate.or((path, property) -> "address".equals(property.getName())
+													 || path.toDotPath().startsWith("address.") && "street".equals(property.getName()));
+		predicate = predicate.or((path, property) -> "country".equals(property.getName())
+													 || path.toDotPath().contains("address.country.") && "name".equals(property.getName()));
 		return predicate;
 	}
 

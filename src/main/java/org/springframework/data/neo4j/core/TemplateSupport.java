@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
@@ -87,7 +88,7 @@ public final class TemplateSupport {
 		}
 
 		Collection<Class<?>> allClasses = StreamSupport.stream(collection.spliterator(), true)
-				.filter(o -> o != null)
+				.filter(Objects::nonNull)
 				.map(Object::getClass).collect(Collectors.toSet());
 
 		if (allClasses.isEmpty()) {
@@ -172,11 +173,11 @@ public final class TemplateSupport {
 	 */
 	static final class NodesAndRelationshipsByIdStatementProvider {
 
-		private final static String ROOT_NODE_IDS = "rootNodeIds";
-		private final static String RELATIONSHIP_IDS = "relationshipIds";
-		private final static String RELATED_NODE_IDS = "relatedNodeIds";
+		private static final String ROOT_NODE_IDS = "rootNodeIds";
+		private static final String RELATIONSHIP_IDS = "relationshipIds";
+		private static final String RELATED_NODE_IDS = "relatedNodeIds";
 
-		final static NodesAndRelationshipsByIdStatementProvider EMPTY =
+		static final NodesAndRelationshipsByIdStatementProvider EMPTY =
 				new NodesAndRelationshipsByIdStatementProvider(Collections.emptySet(), Collections.emptySet(), Collections.emptySet(), new QueryFragments());
 
 		private final Map<String, Collection<Long>> parameters = new HashMap<>(3);
