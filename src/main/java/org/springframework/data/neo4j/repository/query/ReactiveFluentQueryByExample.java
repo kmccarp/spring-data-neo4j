@@ -143,10 +143,7 @@ final class ReactiveFluentQueryByExample<S, R> extends FluentQuerySupport<R> imp
 				.matching(QueryFragmentsAndParameters.forExample(mappingContext, example, pageable,
 						createIncludedFieldsPredicate()))
 				.all();
-		return results.collectList().zipWith(countOperation.apply(example)).map(tuple -> {
-			Page<R> page = PageableExecutionUtils.getPage(tuple.getT1(), pageable, () -> tuple.getT2());
-			return page;
-		});
+		return results.collectList().zipWith(countOperation.apply(example)).map(tuple -> PageableExecutionUtils.getPage(tuple.getT1(), pageable, tuple::getT2));
 	}
 
 	@Override

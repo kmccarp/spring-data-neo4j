@@ -77,7 +77,7 @@ public class Domain2Config {
 
 	@Bean
 	public DatabaseSelectionProvider domain2Selection() {
-		return () -> DatabaseSelection.undecided();
+		return DatabaseSelection::undecided;
 	}
 
 	@Bean

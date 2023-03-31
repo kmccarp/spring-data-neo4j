@@ -31,7 +31,7 @@ import org.springframework.data.neo4j.core.schema.Node;
 @Setter
 @Node
 @ToString
-public class PersonWithWither {
+public final class PersonWithWither {
 
 	@Id @GeneratedValue private final Long id;
 

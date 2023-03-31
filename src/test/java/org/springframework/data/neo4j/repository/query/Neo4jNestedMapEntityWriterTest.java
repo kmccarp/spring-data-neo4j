@@ -115,7 +115,7 @@ class Neo4jNestedMapEntityWriterTest {
 
 		assertThat(result).hasEntrySatisfying("__labels__", isAListValue);
 		Value labels = (Value) result.get("__labels__");
-		assertThat(labels.asList(v -> v.asString())).containsExactlyInAnyOrder("Person");
+		assertThat(labels.asList(Value::asString)).containsExactlyInAnyOrder("Person");
 		assertThat(result).containsEntry("__id__", Values.value("xxx"));
 
 		assertThat(result).hasEntrySatisfying("__properties__", isAMap);
@@ -162,7 +162,7 @@ class Neo4jNestedMapEntityWriterTest {
 
 		assertThat(result).hasEntrySatisfying("__labels__", isAListValue);
 		Value labels = (Value) result.get("__labels__");
-		assertThat(labels.asList(v -> v.asString())).containsExactlyInAnyOrder("FlatEntity");
+		assertThat(labels.asList(Value::asString)).containsExactlyInAnyOrder("FlatEntity");
 
 		assertThat(result).hasEntrySatisfying("__properties__", isAMap);
 		Map<String, Object> properties = (Map<String, Object>) result.get("__properties__");
@@ -183,7 +183,7 @@ class Neo4jNestedMapEntityWriterTest {
 
 		assertThat(result).hasEntrySatisfying("__labels__", isAListValue);
 		Value labels = (Value) result.get("__labels__");
-		assertThat(labels.asList(v -> v.asString())).containsExactlyInAnyOrder("FlatEntityWithAdditionalTypes");
+		assertThat(labels.asList(Value::asString)).containsExactlyInAnyOrder("FlatEntityWithAdditionalTypes");
 
 		assertThat(result).hasEntrySatisfying("__properties__", isAMap);
 		Map<String, Object> properties = (Map<String, Object>) result.get("__properties__");
@@ -205,7 +205,7 @@ class Neo4jNestedMapEntityWriterTest {
 
 		assertThat(result).hasEntrySatisfying("__labels__", isAListValue);
 		Value labels = (Value) result.get("__labels__");
-		assertThat(labels.asList(v -> v.asString()))
+		assertThat(labels.asList(Value::asString))
 				.containsExactlyInAnyOrder("FlatEntityWithDynamicLabels", "Label1", "Label2");
 
 		assertThat(result).hasEntrySatisfying("__properties__", isAMap);
@@ -228,7 +228,7 @@ class Neo4jNestedMapEntityWriterTest {
 
 		assertThat(result).hasEntrySatisfying("__labels__", isAListValue);
 		Value labels = (Value) result.get("__labels__");
-		assertThat(labels.asList(v -> v.asString()))
+		assertThat(labels.asList(Value::asString))
 				.containsExactlyInAnyOrder("A");
 
 		assertThat(result).hasEntrySatisfying("__properties__", isAMap);
@@ -269,7 +269,7 @@ class Neo4jNestedMapEntityWriterTest {
 
 		assertThat(result).hasEntrySatisfying("__labels__", isAListValue);
 		Value labels = (Value) result.get("__labels__");
-		assertThat(labels.asList(v -> v.asString()))
+		assertThat(labels.asList(Value::asString))
 				.containsExactlyInAnyOrder("A3");
 
 		assertThat(result).hasEntrySatisfying("__properties__", isAMap);
@@ -321,7 +321,7 @@ class Neo4jNestedMapEntityWriterTest {
 
 		assertThat(result).hasEntrySatisfying("__labels__", isAListValue);
 		Value labels = (Value) result.get("__labels__");
-		assertThat(labels.asList(v -> v.asString()))
+		assertThat(labels.asList(Value::asString))
 				.containsExactlyInAnyOrder("A2");
 
 		assertThat(result).hasEntrySatisfying("__properties__", isAMap);
@@ -360,7 +360,7 @@ class Neo4jNestedMapEntityWriterTest {
 
 		assertThat(result).hasEntrySatisfying("__labels__", isAListValue);
 		Value labels = (Value) result.get("__labels__");
-		assertThat(labels.asList(v -> v.asString())).containsExactlyInAnyOrder("A4");
+		assertThat(labels.asList(Value::asString)).containsExactlyInAnyOrder("A4");
 
 		assertThat(result).containsEntry("__id__", Values.value("a4I"));
 
@@ -393,7 +393,7 @@ class Neo4jNestedMapEntityWriterTest {
 
 		assertThat(result).hasEntrySatisfying("__labels__", isAListValue);
 		Value labels = (Value) result.get("__labels__");
-		assertThat(labels.asList(v -> v.asString())).containsExactlyInAnyOrder("A5");
+		assertThat(labels.asList(Value::asString)).containsExactlyInAnyOrder("A5");
 
 		assertThat(result).containsEntry("__id__", Values.value("a5I"));
 
@@ -427,7 +427,7 @@ class Neo4jNestedMapEntityWriterTest {
 
 		assertThat(result).hasEntrySatisfying("__labels__", isAListValue);
 		Value labels = (Value) result.get("__labels__");
-		assertThat(labels.asList(v -> v.asString())).containsExactlyInAnyOrder("A6");
+		assertThat(labels.asList(Value::asString)).containsExactlyInAnyOrder("A6");
 
 		assertThat(result).containsEntry("__id__", Values.value("a6I"));
 
@@ -464,7 +464,7 @@ class Neo4jNestedMapEntityWriterTest {
 
 		assertThat(result).hasEntrySatisfying("__labels__", isAListValue);
 		Value labels = (Value) result.get("__labels__");
-		assertThat(labels.asList(v -> v.asString())).containsExactlyInAnyOrder("A7");
+		assertThat(labels.asList(Value::asString)).containsExactlyInAnyOrder("A7");
 
 		assertThat(result).containsEntry("__id__", Values.value("a7I"));
 
