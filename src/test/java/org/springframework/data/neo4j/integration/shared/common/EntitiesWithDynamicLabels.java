@@ -153,7 +153,7 @@ public final class EntitiesWithDynamicLabels {
 	}
 
 	@Node
-	static abstract class DynamicLabelsBaseClass {
+	abstract static class DynamicLabelsBaseClass {
 
 		@Id @GeneratedValue private Long id;
 	}
@@ -182,7 +182,7 @@ public final class EntitiesWithDynamicLabels {
 	 * Base entity for the multi-level abstraction
 	 */
 	@Node
-	public static abstract class BaseEntityWithoutDynamicLabels {
+	public abstract static class BaseEntityWithoutDynamicLabels {
 		@Id public String id;
 	}
 
@@ -190,7 +190,7 @@ public final class EntitiesWithDynamicLabels {
 	 * adds the labels
 	 */
 	@Node
-	public static abstract class AbstractBaseEntityWithDynamicLabels extends BaseEntityWithoutDynamicLabels {
+	public abstract static class AbstractBaseEntityWithDynamicLabels extends BaseEntityWithoutDynamicLabels {
 		@DynamicLabels public Set<String> labels;
 	}
 
@@ -198,7 +198,7 @@ public final class EntitiesWithDynamicLabels {
 	 * This might be the wrong most concrete class to be found
 	 */
 	@Node
-	public static abstract class AbstractEntityWithDynamicLabels extends AbstractBaseEntityWithDynamicLabels {
+	public abstract static class AbstractEntityWithDynamicLabels extends AbstractBaseEntityWithDynamicLabels {
 
 	}
 

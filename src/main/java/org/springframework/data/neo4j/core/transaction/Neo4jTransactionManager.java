@@ -52,6 +52,8 @@ import org.springframework.util.StringUtils;
 @API(status = API.Status.STABLE, since = "6.0")
 public final class Neo4jTransactionManager extends AbstractPlatformTransactionManager implements ApplicationContextAware {
 
+	private static final long serialVersionUID = 1;
+
 	/**
 	 * Start building a new transaction manager for the given driver instance.
 	 * @param driver A fixed driver instance.

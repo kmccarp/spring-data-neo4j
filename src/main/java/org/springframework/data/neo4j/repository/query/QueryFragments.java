@@ -54,13 +54,13 @@ public final class QueryFragments {
 	private Number limit;
 	private Long skip;
 	private ReturnTuple returnTuple;
-	private boolean scalarValueReturn = false;
-	private boolean renderConstantsAsParameters = false;
+	private boolean scalarValueReturn;
+	private boolean renderConstantsAsParameters;
 	private Expression deleteExpression;
 	/**
 	 * This flag becomes {@literal true} for backward scrolling keyset pagination. Any {@code AbstractNeo4jQuery} will in turn reverse the result list.
 	 */
-	private boolean requiresReverseSort = false;
+	private boolean requiresReverseSort;
 
 	public void addMatchOn(PatternElement match) {
 		this.matchOn.add(match);
@@ -164,7 +164,7 @@ public final class QueryFragments {
 	}
 
 	private Collection<Expression> getReturnExpressions() {
-		return returnExpressions.size() > 0
+		return !returnExpressions.isEmpty()
 				? returnExpressions
 				: CypherGenerator.INSTANCE.createReturnStatementForMatch((Neo4jPersistentEntity<?>) returnTuple.nodeDescription,
 				this::includeField);
@@ -215,7 +215,7 @@ public final class QueryFragments {
 	/**
 	 * Describes which fields of an entity needs to get returned.
 	 */
-	final static class ReturnTuple {
+	static final class ReturnTuple {
 		final NodeDescription<?> nodeDescription;
 		final PropertyFilter filteredProperties;
 		final boolean isDistinct;

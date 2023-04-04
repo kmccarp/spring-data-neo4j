@@ -595,7 +595,7 @@ final class CypherQueryCreator extends AbstractQueryCreator<QueryFragmentsAndPar
 	 */
 	static final class IndexSupplier implements Supplier<String> {
 
-		private AtomicInteger current = new AtomicInteger(0);
+		private final AtomicInteger current = new AtomicInteger(0);
 
 		@Override
 		public String get() {
