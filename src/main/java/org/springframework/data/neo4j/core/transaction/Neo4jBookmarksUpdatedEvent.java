@@ -33,6 +33,8 @@ import org.springframework.context.ApplicationEvent;
 @API(status = API.Status.STABLE, since = "6.1.1")
 public final class Neo4jBookmarksUpdatedEvent extends ApplicationEvent {
 
+	private static final long serialVersionUID = 1;
+
 	private final Set<Bookmark> bookmarks;
 
 	Neo4jBookmarksUpdatedEvent(Set<Bookmark> bookmarks) {

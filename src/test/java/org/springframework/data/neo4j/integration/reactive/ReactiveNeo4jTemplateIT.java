@@ -105,7 +105,7 @@ class ReactiveNeo4jTemplateIT {
 
 		try (
 				Session session = driver.session(bookmarkCapture.createSessionConfig());
-				Transaction transaction = session.beginTransaction();
+				Transaction transaction = session.beginTransaction()
 		) {
 			transaction.run("MATCH (n) detach delete n");
 
@@ -363,11 +363,11 @@ class ReactiveNeo4jTemplateIT {
 
 	private static BiPredicate<PropertyPath, Neo4jPersistentProperty> create2LevelProjectingPredicate() {
 		BiPredicate<PropertyPath, Neo4jPersistentProperty> predicate = (path, property) -> false;
-		predicate = predicate.or((path, property) -> property.getName().equals("lastName"));
-		predicate = predicate.or((path, property) -> property.getName().equals("address")
-													 || path.toDotPath().startsWith("address.") && property.getName().equals("street"));
-		predicate = predicate.or((path, property) -> property.getName().equals("country")
-													 || path.toDotPath().contains("address.country.") && property.getName().equals("name"));
+		predicate = predicate.or((path, property) -> "lastName".equals(property.getName()));
+		predicate = predicate.or((path, property) -> "address".equals(property.getName())
+													 || path.toDotPath().startsWith("address.") && "street".equals(property.getName()));
+		predicate = predicate.or((path, property) -> "country".equals(property.getName())
+													 || path.toDotPath().contains("address.country.") && "name".equals(property.getName()));
 		return predicate;
 	}
 
@@ -712,7 +712,7 @@ class ReactiveNeo4jTemplateIT {
 
 		template.saveAllAs(things, ClosedProjection.class)
 				.as(StepVerifier::create)
-				.verifyErrorMatches(t -> t instanceof IllegalArgumentException && t.getMessage().equals("Could not determine a common element of an heterogeneous collection"));
+				.verifyErrorMatches(t -> t instanceof IllegalArgumentException && "Could not determine a common element of an heterogeneous collection".equals(t.getMessage()));
 	}
 
 	@Test

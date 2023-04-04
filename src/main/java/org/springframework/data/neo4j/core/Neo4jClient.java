@@ -66,7 +66,7 @@ public interface Neo4jClient {
 	 */
 	@API(status = API.Status.STABLE, since = "6.2")
 	@SuppressWarnings("HiddenField")
-	class Builder {
+	final class Builder {
 
 		final Driver driver;
 
@@ -424,7 +424,7 @@ public interface Neo4jClient {
 	 * @since 6.1.5
 	 */
 	@API(status = API.Status.STABLE, since = "6.1.5")
-	class IllegalDatabaseNameException extends IllegalArgumentException {
+	final class IllegalDatabaseNameException extends IllegalArgumentException {
 
 		private final String illegalDatabaseName;
 
