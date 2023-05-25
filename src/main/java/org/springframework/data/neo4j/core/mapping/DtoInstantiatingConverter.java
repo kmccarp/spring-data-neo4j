@@ -155,22 +155,18 @@ public final class DtoInstantiatingConverter implements Converter<EntityInstance
 			Neo4jPersistentEntity<?> targetEntity,
 			Function<Neo4jPersistentProperty, Object> extractFromSource
 	) {
-		return new ParameterValueProvider<>() {
-			@SuppressWarnings("unchecked") // Needed for the last cast. It's easier that way than using the parameter type info and checking for primitives
-			@Override
-			public <T> T getParameterValue(Parameter<T, Neo4jPersistentProperty> parameter) {
-				String parameterName = parameter.getName();
-				if (parameterName == null) {
-					throw new MappingException(
-							"Constructor parameter names aren't available, please recompile your domain");
-				}
-				Neo4jPersistentProperty targetProperty = targetEntity.getPersistentProperty(parameterName);
-				if (targetProperty == null) {
-					throw new MappingException("Cannot map constructor parameter " + parameterName
-											   + " to a property of class " + targetType);
-				}
-				return (T) extractFromSource.apply(targetProperty);
+		return parameter -> {
+			String parameterName = parameter.getName();
+			if (parameterName == null) {
+				throw new MappingException(
+			"Constructor parameter names aren't available, please recompile your domain");
 			}
+			Neo4jPersistentProperty targetProperty = targetEntity.getPersistentProperty(parameterName);
+			if (targetProperty == null) {
+				throw new MappingException("Cannot map constructor parameter " + parameterName
+			+ " to a property of class " + targetType);
+			}
+			return (T) extractFromSource.apply(targetProperty);
 		};
 	}
 

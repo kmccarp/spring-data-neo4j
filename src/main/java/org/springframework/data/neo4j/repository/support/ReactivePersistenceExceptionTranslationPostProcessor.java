@@ -57,6 +57,8 @@ import org.springframework.util.Assert;
 public final class ReactivePersistenceExceptionTranslationPostProcessor
 		extends AbstractBeanFactoryAwareAdvisingPostProcessor {
 
+	private static final long serialVersionUID = 1;
+
 	private final Class<? extends Annotation> repositoryAnnotationType;
 
 	public ReactivePersistenceExceptionTranslationPostProcessor() {
@@ -87,6 +89,8 @@ public final class ReactivePersistenceExceptionTranslationPostProcessor
 	 * exceptions into Spring's DataAccessException hierarchy, based on a given PersistenceExceptionTranslator.
 	 */
 	static final class ReactivePersistenceExceptionTranslationAdvisor extends AbstractPointcutAdvisor {
+
+		private static final long serialVersionUID = 1;
 
 		private final ReactivePersistenceExceptionTranslationInterceptor advice;
 

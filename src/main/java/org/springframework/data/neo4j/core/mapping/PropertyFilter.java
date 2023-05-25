@@ -53,7 +53,7 @@ public abstract class PropertyFilter {
 		return propertyPath.replaceLastSegment(lastSegment).toDotPath();
 	}
 
-	private static class FilteringPropertyFilter extends PropertyFilter {
+	private static final class FilteringPropertyFilter extends PropertyFilter {
 		private final Set<Class<?>> rootClasses;
 		private final Collection<ProjectedPath> projectingPropertyPaths;
 
@@ -152,7 +152,7 @@ public abstract class PropertyFilter {
 	 * Since we are supporting also querying for base classes with properties coming from the inheriting classes,
 	 * this test on creation is too strict.
 	 */
-	public static class RelaxedPropertyPath {
+	public static final class RelaxedPropertyPath {
 		private final String dotPath;
 		private final Class<?> type;
 
