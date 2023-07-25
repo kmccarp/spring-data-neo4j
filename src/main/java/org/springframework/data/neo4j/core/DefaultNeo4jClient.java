@@ -110,7 +110,7 @@ final class DefaultNeo4jClient implements Neo4jClient {
 		});
 	}
 
-	private static class DelegatingQueryRunner implements QueryRunner {
+	private static final class DelegatingQueryRunner implements QueryRunner {
 
 		private final QueryRunner delegate;
 		private final Collection<Bookmark> usedBookmarks;

@@ -120,10 +120,7 @@ public class CityModelDTO {
 		}
 		final Object this$cityEmployees = this.getCityEmployees();
 		final Object other$cityEmployees = other.getCityEmployees();
-		if (this$cityEmployees == null ? other$cityEmployees != null : !this$cityEmployees.equals(other$cityEmployees)) {
-			return false;
-		}
-		return true;
+		return !(this$cityEmployees == null ? other$cityEmployees != null : !this$cityEmployees.equals(other$cityEmployees));
 	}
 
 	protected boolean canEqual(final Object other) {
@@ -182,10 +179,7 @@ public class CityModelDTO {
 			}
 			final Object this$personId = this.getPersonId();
 			final Object other$personId = other.getPersonId();
-			if (this$personId == null ? other$personId != null : !this$personId.equals(other$personId)) {
-				return false;
-			}
-			return true;
+			return !(this$personId == null ? other$personId != null : !this$personId.equals(other$personId));
 		}
 
 		protected boolean canEqual(final Object other) {
@@ -235,10 +229,7 @@ public class CityModelDTO {
 			}
 			final Object this$person = this.getPerson();
 			final Object other$person = other.getPerson();
-			if (this$person == null ? other$person != null : !this$person.equals(other$person)) {
-				return false;
-			}
-			return true;
+			return !(this$person == null ? other$person != null : !this$person.equals(other$person));
 		}
 
 		protected boolean canEqual(final Object other) {

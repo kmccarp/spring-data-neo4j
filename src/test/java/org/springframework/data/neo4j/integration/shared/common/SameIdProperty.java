@@ -66,10 +66,7 @@ public class SameIdProperty {
 			}
 			final Object this$code = this.getCode();
 			final Object other$code = other.getCode();
-			if (this$code == null ? other$code != null : !this$code.equals(other$code)) {
-				return false;
-			}
-			return true;
+			return !(this$code == null ? other$code != null : !this$code.equals(other$code));
 		}
 
 		protected boolean canEqual(final Object other) {
@@ -146,10 +143,7 @@ public class SameIdProperty {
 			}
 			final Object this$routes = this.getRoutes();
 			final Object other$routes = other.getRoutes();
-			if (this$routes == null ? other$routes != null : !this$routes.equals(other$routes)) {
-				return false;
-			}
-			return true;
+			return !(this$routes == null ? other$routes != null : !this$routes.equals(other$routes));
 		}
 
 		protected boolean canEqual(final Object other) {
@@ -232,10 +226,7 @@ public class SameIdProperty {
 			}
 			final Object this$routes = this.getRoutes();
 			final Object other$routes = other.getRoutes();
-			if (this$routes == null ? other$routes != null : !this$routes.equals(other$routes)) {
-				return false;
-			}
-			return true;
+			return !(this$routes == null ? other$routes != null : !this$routes.equals(other$routes));
 		}
 
 		protected boolean canEqual(final Object other) {
@@ -444,10 +435,7 @@ public class SameIdProperty {
 			}
 			final Object this$pod = this.getPod();
 			final Object other$pod = other.getPod();
-			if (this$pod == null ? other$pod != null : !this$pod.equals(other$pod)) {
-				return false;
-			}
-			return true;
+			return !(this$pod == null ? other$pod != null : !this$pod.equals(other$pod));
 		}
 
 		protected boolean canEqual(final Object other) {
