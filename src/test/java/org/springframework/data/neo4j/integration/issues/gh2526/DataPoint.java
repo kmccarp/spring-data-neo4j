@@ -82,10 +82,7 @@ public final class DataPoint {
 		final DataPoint other = (DataPoint) o;
 		final Object this$measurand = this.getMeasurand();
 		final Object other$measurand = other.getMeasurand();
-		if (this$measurand == null ? other$measurand != null : !this$measurand.equals(other$measurand)) {
-			return false;
-		}
-		return true;
+		return !(this$measurand == null ? other$measurand != null : !this$measurand.equals(other$measurand));
 	}
 
 	public int hashCode() {

@@ -91,7 +91,7 @@ class ReactiveQuerydslNeo4jPredicateExecutorIT {
 	void fluentFindOneShouldWork(@Autowired QueryDSLPersonRepository repository) {
 
 		Predicate predicate = Expressions.predicate(Ops.EQ, firstNamePath, Expressions.asString("Helge"));
-		repository.findBy(predicate, q -> q.one())
+		repository.findBy(predicate, org.springframework.data.repository.query.FluentQuery.ReactiveFluentQuery::one)
 				.map(Person::getLastName)
 				.as(StepVerifier::create)
 				.expectNext("Schneider")
@@ -103,7 +103,7 @@ class ReactiveQuerydslNeo4jPredicateExecutorIT {
 
 		Predicate predicate = Expressions.predicate(Ops.EQ, firstNamePath, Expressions.asString("Helge"))
 				.or(Expressions.predicate(Ops.EQ, lastNamePath, Expressions.asString("B.")));
-		repository.findBy(predicate, q -> q.all())
+		repository.findBy(predicate, org.springframework.data.repository.query.FluentQuery.ReactiveFluentQuery::all)
 				.map(Person::getFirstName)
 				.sort() // Due to not having something like containsExactlyInAnyOrder
 				.as(StepVerifier::create)
@@ -258,7 +258,7 @@ class ReactiveQuerydslNeo4jPredicateExecutorIT {
 	void fluentExistsShouldWork(@Autowired QueryDSLPersonRepository repository) {
 
 		Predicate predicate = Expressions.predicate(Ops.EQ, firstNamePath, Expressions.asString("Helge"));
-		repository.findBy(predicate, q -> q.exists()).as(StepVerifier::create).expectNext(true).verifyComplete();
+		repository.findBy(predicate, org.springframework.data.repository.query.FluentQuery.ReactiveFluentQuery::exists).as(StepVerifier::create).expectNext(true).verifyComplete();
 	}
 
 	@Test // GH-2361
@@ -266,7 +266,7 @@ class ReactiveQuerydslNeo4jPredicateExecutorIT {
 
 		Predicate predicate = Expressions.predicate(Ops.EQ, firstNamePath, Expressions.asString("Helge"))
 				.or(Expressions.predicate(Ops.EQ, lastNamePath, Expressions.asString("B.")));
-		repository.findBy(predicate, q -> q.count()).as(StepVerifier::create).expectNext(2L).verifyComplete();
+		repository.findBy(predicate, org.springframework.data.repository.query.FluentQuery.ReactiveFluentQuery::count).as(StepVerifier::create).expectNext(2L).verifyComplete();
 	}
 
 	@Test // GH-2361

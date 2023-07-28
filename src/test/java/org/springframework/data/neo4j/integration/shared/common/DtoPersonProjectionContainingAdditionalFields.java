@@ -100,10 +100,7 @@ public final class DtoPersonProjectionContainingAdditionalFields {
 		}
 		final Object this$someDoubles = this.getSomeDoubles();
 		final Object other$someDoubles = other.getSomeDoubles();
-		if (this$someDoubles == null ? other$someDoubles != null : !this$someDoubles.equals(other$someDoubles)) {
-			return false;
-		}
-		return true;
+		return !(this$someDoubles == null ? other$someDoubles != null : !this$someDoubles.equals(other$someDoubles));
 	}
 
 	public int hashCode() {
