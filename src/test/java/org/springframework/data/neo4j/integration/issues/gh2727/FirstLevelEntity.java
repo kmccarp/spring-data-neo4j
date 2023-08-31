@@ -87,10 +87,7 @@ public class FirstLevelEntity {
 		}
 		final Object this$id = this.getId();
 		final Object other$id = other.getId();
-		if (this$id == null ? other$id != null : !this$id.equals(other$id)) {
-			return false;
-		}
-		return true;
+		return !(this$id == null ? other$id != null : !this$id.equals(other$id));
 	}
 
 	protected boolean canEqual(final Object other) {
@@ -110,7 +107,7 @@ public class FirstLevelEntity {
 	 * @param <C> needed c type
 	 * @param <B> needed b type
 	 */
-	public static abstract class FirstLevelEntityBuilder<C extends FirstLevelEntity, B extends FirstLevelEntityBuilder<C, B>> {
+	public abstract static class FirstLevelEntityBuilder<C extends FirstLevelEntity, B extends FirstLevelEntityBuilder<C, B>> {
 		private Long id;
 		private String name;
 		private List<SecondLevelEntityRelationship> secondLevelEntityRelationshipProperties;

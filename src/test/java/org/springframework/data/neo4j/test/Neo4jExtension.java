@@ -60,16 +60,16 @@ import static org.assertj.core.api.Assumptions.assumeThat;
  */
 public class Neo4jExtension implements BeforeAllCallback, BeforeEachCallback {
 
-	public final static String NEEDS_REACTIVE_SUPPORT = "reactive-test";
-	public final static String COMMUNITY_EDITION_ONLY = "community-edition";
-	public final static String COMMERCIAL_EDITION_ONLY = "commercial-edition";
+	public static final String NEEDS_REACTIVE_SUPPORT = "reactive-test";
+	public static final String COMMUNITY_EDITION_ONLY = "community-edition";
+	public static final String COMMERCIAL_EDITION_ONLY = "commercial-edition";
 	/**
 	 * Indicator that a given _test_ is not compatible in all cases with a cluster setup, especially in terms of
 	 * synchronizing bookmarks between fixture / assertions and tests. Or it may indicate a dedicated cluster test, running
 	 * against a dedicated extension.
 	 */
-	public final static String INCOMPATIBLE_WITH_CLUSTERS = "incompatible-with-clusters";
-	public final static String REQUIRES = "Neo4j/";
+	public static final String INCOMPATIBLE_WITH_CLUSTERS = "incompatible-with-clusters";
+	public static final String REQUIRES = "Neo4j/";
 
 	private static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(Neo4jExtension.class);
 
@@ -83,9 +83,9 @@ public class Neo4jExtension implements BeforeAllCallback, BeforeEachCallback {
 	private static final String SYS_PROPERTY_NEO4J_VERSION = "SDN_NEO4J_VERSION";
 	private static final Log log = org.apache.commons.logging.LogFactory.getLog(Neo4jExtension.class);
 
-	private static Set<String> COMMUNITY_EDITION_INDICATOR = Collections.singleton("community");
+	private static final Set<String> COMMUNITY_EDITION_INDICATOR = Collections.singleton("community");
 
-	private static Set<String> COMMERCIAL_EDITION_INDICATOR = new HashSet<>(Arrays.asList("commercial", "enterprise"));
+	private static final Set<String> COMMERCIAL_EDITION_INDICATOR = new HashSet<>(Arrays.asList("commercial", "enterprise"));
 
 	@Override
 	public void beforeAll(ExtensionContext context) throws Exception {

@@ -57,10 +57,7 @@ public class Neo4jObject {
 		}
 		final Object this$id = this.getId();
 		final Object other$id = other.getId();
-		if (this$id == null ? other$id != null : !this$id.equals(other$id)) {
-			return false;
-		}
-		return true;
+		return !(this$id == null ? other$id != null : !this$id.equals(other$id));
 	}
 
 	protected boolean canEqual(final Object other) {

@@ -70,9 +70,9 @@ interface Neo4jQueryExecution {
 					neo4jOperations.toExecutableQuery(preparedQuery);
 
 			if (asCollectionQuery) {
-				return executableQuery.flatMapMany(q -> q.getResults());
+				return executableQuery.flatMapMany(org.springframework.data.neo4j.core.ReactiveNeo4jOperations.ExecutableQuery::getResults);
 			} else {
-				return executableQuery.flatMap(q -> q.getSingleResult());
+				return executableQuery.flatMap(org.springframework.data.neo4j.core.ReactiveNeo4jOperations.ExecutableQuery::getSingleResult);
 			}
 		}
 	}

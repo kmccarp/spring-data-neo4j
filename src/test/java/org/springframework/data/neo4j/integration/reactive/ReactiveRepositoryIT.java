@@ -305,7 +305,7 @@ class ReactiveRepositoryIT {
 			Example<PersonWithAllConstructor> example = Example.of(person1,
 					ExampleMatcher.matchingAll().withIgnoreNullValues());
 
-			repository.findBy(example, q -> q.one())
+			repository.findBy(example, org.springframework.data.repository.query.FluentQuery.ReactiveFluentQuery::one)
 					.as(StepVerifier::create)
 					.expectNext(person1)
 					.verifyComplete();
@@ -653,7 +653,7 @@ class ReactiveRepositoryIT {
 		void existsByExampleFluent(@Autowired ReactivePersonRepository repository) {
 
 			Example<PersonWithAllConstructor> example = Example.of(personExample(TEST_PERSON_SAMEVALUE));
-			repository.findBy(example, q -> q.exists())
+			repository.findBy(example, org.springframework.data.repository.query.FluentQuery.ReactiveFluentQuery::exists)
 					.as(StepVerifier::create)
 					.expectNext(true)
 					.verifyComplete();
@@ -674,7 +674,7 @@ class ReactiveRepositoryIT {
 		void countByExampleFluent(@Autowired ReactivePersonRepository repository) {
 
 			Example<PersonWithAllConstructor> example = Example.of(person1);
-			repository.findBy(example, q -> q.count())
+			repository.findBy(example, org.springframework.data.repository.query.FluentQuery.ReactiveFluentQuery::count)
 					.as(StepVerifier::create)
 					.expectNext(1L)
 					.verifyComplete();
@@ -1665,11 +1665,8 @@ class ReactiveRepositoryIT {
 				existingPerson.setFirstName("Updated first name");
 				existingPerson.setNullable("Updated nullable field");
 				return existingPerson;
-			}).concatWith(Mono.fromSupplier(() -> {
-				PersonWithAllConstructor newPerson = new PersonWithAllConstructor(null, "Mercury", "Freddie", "Queen", true,
-						1509L, LocalDate.of(1946, 9, 15), null, Collections.emptyList(), null, null);
-				return newPerson;
-			}));
+			}).concatWith(Mono.fromSupplier(() -> new PersonWithAllConstructor(null, "Mercury", "Freddie", "Queen", true,
+						1509L, LocalDate.of(1946, 9, 15), null, Collections.emptyList(), null, null)));
 
 			Flux<Long> operationUnderTest = repository.saveAll(persons).map(PersonWithAllConstructor::getId);
 
@@ -1720,8 +1717,8 @@ class ReactiveRepositoryIT {
 				Value parameters = Values.parameters("id", id1);
 				return Flux.from(s.run("MATCH (n:PersonWithAllConstructor) WHERE id(n) = $id RETURN n", parameters)).flatMap(ReactiveResult::records);
 			}, s -> Mono.fromDirect(s.close())).map(r -> r.get("n").asNode()).as(StepVerifier::create)
-					.expectNextMatches(node -> node.get("first_name").asString().equals("Updated first name")
-							&& node.get("nullable").asString().equals("Updated nullable field"))
+					.expectNextMatches(node -> "Updated first name".equals(node.get("first_name").asString())
+							&& "Updated nullable field".equals(node.get("nullable").asString()))
 					.verifyComplete();
 		}
 
@@ -2810,7 +2807,7 @@ class ReactiveRepositoryIT {
 			extends ReactiveNeo4jRepository<EntitiesWithDynamicLabels.EntityWithCustomIdAndDynamicLabels, String> {}
 
 	@SpringJUnitConfig(ReactiveRepositoryIT.Config.class)
-	static abstract class ReactiveIntegrationTestBase {
+	abstract static class ReactiveIntegrationTestBase {
 
 		@Autowired private Driver driver;
 
@@ -2911,7 +2908,7 @@ class ReactiveRepositoryIT {
 		@Bean
 		public ReactiveUserSelectionProvider getUserSelectionProvider() {
 			return Optional.ofNullable(userSelection.get()) // The thread local must be resolved early, before the mono
-					.map(u -> (ReactiveUserSelectionProvider) () -> Mono.just(u))
+					.map(ReactiveUserSelectionProvider.class::cast)
 					.orElse(ReactiveUserSelectionProvider.getDefaultSelectionProvider());
 		}
 

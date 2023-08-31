@@ -70,10 +70,7 @@ public class OneToOneSource {
 		}
 		final Object this$target = this.getTarget();
 		final Object other$target = other.getTarget();
-		if (this$target == null ? other$target != null : !this$target.equals(other$target)) {
-			return false;
-		}
-		return true;
+		return !(this$target == null ? other$target != null : !this$target.equals(other$target));
 	}
 
 	protected boolean canEqual(final Object other) {
@@ -138,10 +135,7 @@ public class OneToOneSource {
 			}
 			final Object this$target = this.getTarget();
 			final Object other$target = other.getTarget();
-			if (this$target == null ? other$target != null : !this$target.equals(other$target)) {
-				return false;
-			}
-			return true;
+			return !(this$target == null ? other$target != null : !this$target.equals(other$target));
 		}
 
 		protected boolean canEqual(final Object other) {
