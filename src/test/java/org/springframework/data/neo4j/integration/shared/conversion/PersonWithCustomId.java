@@ -60,10 +60,7 @@ public final class PersonWithCustomId {
 		}
 		final Object this$name = this.getName();
 		final Object other$name = other.getName();
-		if (this$name == null ? other$name != null : !this$name.equals(other$name)) {
-			return false;
-		}
-		return true;
+		return !(this$name == null ? other$name != null : !this$name.equals(other$name));
 	}
 
 	public int hashCode() {
@@ -108,10 +105,7 @@ public final class PersonWithCustomId {
 			final PersonId other = (PersonId) o;
 			final Object this$id = this.getId();
 			final Object other$id = other.getId();
-			if (this$id == null ? other$id != null : !this$id.equals(other$id)) {
-				return false;
-			}
-			return true;
+			return !(this$id == null ? other$id != null : !this$id.equals(other$id));
 		}
 
 		public int hashCode() {

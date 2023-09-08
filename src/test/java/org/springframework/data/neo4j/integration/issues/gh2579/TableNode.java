@@ -132,10 +132,7 @@ public class TableNode {
 		}
 		final Object this$tableAndColumnRelation = this.getTableAndColumnRelation();
 		final Object other$tableAndColumnRelation = other.getTableAndColumnRelation();
-		if (this$tableAndColumnRelation == null ? other$tableAndColumnRelation != null : !this$tableAndColumnRelation.equals(other$tableAndColumnRelation)) {
-			return false;
-		}
-		return true;
+		return !(this$tableAndColumnRelation == null ? other$tableAndColumnRelation != null : !this$tableAndColumnRelation.equals(other$tableAndColumnRelation));
 	}
 
 	protected boolean canEqual(final Object other) {

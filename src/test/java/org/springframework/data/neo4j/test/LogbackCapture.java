@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.slf4j.LoggerFactory;
 
 /**
  * Provides access to the formatted message captured from Logback during test run.
@@ -42,11 +43,11 @@ public final class LogbackCapture implements ExtensionContext.Store.CloseableRes
 	LogbackCapture() {
 		this.listAppender = new ListAppender<>();
 		// While forbidden by our checkstyle, we must go that route to get the logback root logger.
-		this.logger = (Logger) org.slf4j.LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+		this.logger = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
 	}
 
 	public void addLogger(String loggerName, Level level) {
-		Logger additionalLogger = (Logger) org.slf4j.LoggerFactory.getLogger(loggerName);
+		Logger additionalLogger = (Logger) LoggerFactory.getLogger(loggerName);
 
 		// save the current log level for restore later
 		this.additionalLoggers.put(additionalLogger, additionalLogger.getLevel());
@@ -54,7 +55,7 @@ public final class LogbackCapture implements ExtensionContext.Store.CloseableRes
 	}
 
 	public List<String> getFormattedMessages() {
-		return listAppender.list.stream().map(e -> e.getFormattedMessage()).collect(Collectors.toList());
+		return listAppender.list.stream().map(ILoggingEvent::getFormattedMessage).collect(Collectors.toList());
 	}
 
 	void start() {
