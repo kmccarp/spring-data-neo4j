@@ -77,10 +77,7 @@ public final class ImmutableSample {
 		}
 		final Object this$modified = this.getModified();
 		final Object other$modified = other.getModified();
-		if (this$modified == null ? other$modified != null : !this$modified.equals(other$modified)) {
-			return false;
-		}
-		return true;
+		return !(this$modified == null ? other$modified != null : !this$modified.equals(other$modified));
 	}
 
 	public int hashCode() {

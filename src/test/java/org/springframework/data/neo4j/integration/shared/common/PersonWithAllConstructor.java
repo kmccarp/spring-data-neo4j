@@ -191,10 +191,7 @@ public class PersonWithAllConstructor {
 		}
 		final Object this$createdAt = this.getCreatedAt();
 		final Object other$createdAt = other.getCreatedAt();
-		if (this$createdAt == null ? other$createdAt != null : !this$createdAt.equals(other$createdAt)) {
-			return false;
-		}
-		return true;
+		return !(this$createdAt == null ? other$createdAt != null : !this$createdAt.equals(other$createdAt));
 	}
 
 	protected boolean canEqual(final Object other) {

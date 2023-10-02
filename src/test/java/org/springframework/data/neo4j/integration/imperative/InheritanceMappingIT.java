@@ -359,7 +359,7 @@ public class InheritanceMappingIT {
 			assertThat(d.getIsActiveIn()).extracting(Inheritance.BaseTerritory::getNameEn)
 					.containsExactlyInAnyOrder("anotherCountry", "continent");
 			Map<String, Class> classByName = d.getIsActiveIn().stream()
-					.collect(Collectors.toMap(Inheritance.BaseTerritory::getNameEn, v -> v.getClass()));
+					.collect(Collectors.toMap(Inheritance.BaseTerritory::getNameEn, java.lang.Object::getClass));
 			assertThat(classByName).containsEntry("anotherCountry", Inheritance.Country.class);
 			assertThat(classByName).containsEntry("continent", Inheritance.Continent.class);
 		};
@@ -433,7 +433,7 @@ public class InheritanceMappingIT {
 			assertThat(d.getIsRelatedTo()).extracting(Inheritance.SomeInterface3::getName)
 					.containsExactlyInAnyOrder("3a", "3b");
 			Map<String, Class> classByName = d.getIsRelatedTo().stream()
-					.collect(Collectors.toMap(Inheritance.SomeInterface3::getName, v -> v.getClass()));
+					.collect(Collectors.toMap(Inheritance.SomeInterface3::getName, java.lang.Object::getClass));
 			assertThat(classByName).containsEntry("3a", Inheritance.SomeInterfaceImpl3a.class);
 			assertThat(classByName).containsEntry("3b", Inheritance.SomeInterfaceImpl3b.class);
 		};
