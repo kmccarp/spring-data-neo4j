@@ -97,10 +97,7 @@ public class PersonModel {
 		}
 		final Object this$favoriteFood = this.getFavoriteFood();
 		final Object other$favoriteFood = other.getFavoriteFood();
-		if (this$favoriteFood == null ? other$favoriteFood != null : !this$favoriteFood.equals(other$favoriteFood)) {
-			return false;
-		}
-		return true;
+        return !(this$favoriteFood == null ? other$favoriteFood != null : !this$favoriteFood.equals(other$favoriteFood));
 	}
 
 	protected boolean canEqual(final Object other) {

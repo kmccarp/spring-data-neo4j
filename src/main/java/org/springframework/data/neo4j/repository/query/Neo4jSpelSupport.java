@@ -90,9 +90,8 @@ public final class Neo4jSpelSupport {
 	 */
 	public static LiteralReplacement literal(@Nullable Object arg) {
 
-		LiteralReplacement literalReplacement = StringBasedLiteralReplacement
+		return StringBasedLiteralReplacement
 				.withTargetAndValue(LiteralReplacement.Target.UNSPECIFIED, arg == null ? "" : arg.toString());
-		return literalReplacement;
 	}
 
 	public static LiteralReplacement anyOf(@Nullable Object arg) {
@@ -143,7 +142,7 @@ public final class Neo4jSpelSupport {
 		Target getTarget();
 	}
 
-	private static class StringBasedLiteralReplacement implements LiteralReplacement {
+    private static final class StringBasedLiteralReplacement implements LiteralReplacement {
 
 		/**
 		 * Default number of cached instances.
@@ -155,7 +154,7 @@ public final class Neo4jSpelSupport {
 		 * the creation of too many small objects.
 		 */
 		private static final Map<String, LiteralReplacement> INSTANCES =
-				new LinkedHashMap<String, LiteralReplacement>(DEFAULT_CACHE_SIZE) {
+				new LinkedHashMap<>(DEFAULT_CACHE_SIZE) {
 					@Override
 					protected boolean removeEldestEntry(Map.Entry<String, LiteralReplacement> eldest) {
 						return size() > DEFAULT_CACHE_SIZE;
@@ -167,7 +166,7 @@ public final class Neo4jSpelSupport {
 		static LiteralReplacement withTargetAndValue(LiteralReplacement.Target target, @Nullable String value) {
 
 			String valueUsed = value == null ? "" : value;
-			String key = new StringBuilder(target.name()).append("_").append(valueUsed).toString();
+			String key = target.name() + "_" + valueUsed;
 
 			long stamp = LOCK.tryOptimisticRead();
 			if (LOCK.validate(stamp) && INSTANCES.containsKey(key)) {

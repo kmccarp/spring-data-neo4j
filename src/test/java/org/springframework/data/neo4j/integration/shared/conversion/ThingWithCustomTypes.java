@@ -79,10 +79,10 @@ public class ThingWithCustomTypes {
 		return dateAsString;
 	}
 
-	/**
-	 * Custom type to convert
-	 */
-	public static class CustomType {
+    /**
+     * Custom type to convert
+     */
+    public static final class CustomType {
 
 		private final String value;
 
@@ -140,10 +140,10 @@ public class ThingWithCustomTypes {
 		}
 	}
 
-	/**
-	 * A type that is not bound anywhere but has a converter
-	 */
-	public static class DifferentType {
+    /**
+     * A type that is not bound anywhere but has a converter
+     */
+    public static final class DifferentType {
 
 		private final String value;
 

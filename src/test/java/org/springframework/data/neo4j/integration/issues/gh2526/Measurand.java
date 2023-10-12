@@ -48,10 +48,7 @@ public final class Measurand {
 		final Measurand other = (Measurand) o;
 		final Object this$measurandId = this.getMeasurandId();
 		final Object other$measurandId = other.getMeasurandId();
-		if (this$measurandId == null ? other$measurandId != null : !this$measurandId.equals(other$measurandId)) {
-			return false;
-		}
-		return true;
+        return !(this$measurandId == null ? other$measurandId != null : !this$measurandId.equals(other$measurandId));
 	}
 
 	public int hashCode() {

@@ -30,7 +30,7 @@ import org.springframework.data.neo4j.types.GeographicPoint3d;
  * @author Michael J. Simons
  */
 @Node("SpatialTypes")
-public class ThingWithAllSpatialTypes {
+public final class ThingWithAllSpatialTypes {
 
 	@Id
 	@GeneratedValue
@@ -141,10 +141,7 @@ public class ThingWithAllSpatialTypes {
 		}
 		final Object this$car3d = this.getCar3d();
 		final Object other$car3d = other.getCar3d();
-		if (this$car3d == null ? other$car3d != null : !this$car3d.equals(other$car3d)) {
-			return false;
-		}
-		return true;
+        return !(this$car3d == null ? other$car3d != null : !this$car3d.equals(other$car3d));
 	}
 
 	protected boolean canEqual(final Object other) {

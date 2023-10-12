@@ -137,10 +137,7 @@ public class CityModel {
 		}
 		final Object this$exoticProperty = this.getExoticProperty();
 		final Object other$exoticProperty = other.getExoticProperty();
-		if (this$exoticProperty == null ? other$exoticProperty != null : !this$exoticProperty.equals(other$exoticProperty)) {
-			return false;
-		}
-		return true;
+        return !(this$exoticProperty == null ? other$exoticProperty != null : !this$exoticProperty.equals(other$exoticProperty));
 	}
 
 	protected boolean canEqual(final Object other) {

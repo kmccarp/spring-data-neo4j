@@ -40,7 +40,7 @@ public abstract class PropertyFilter {
 		return new NonFilteringPropertyFilter();
 	}
 
-	public static final Predicate<RelaxedPropertyPath> NO_FILTER = (pp) -> true;
+	public static final Predicate<RelaxedPropertyPath> NO_FILTER = pp -> true;
 
 	public abstract boolean contains(String dotPath, Class<?> typeToCheck);
 
@@ -56,7 +56,7 @@ public abstract class PropertyFilter {
 		return propertyPath.replaceLastSegment(lastSegment).toDotPath();
 	}
 
-	private static class FilteringPropertyFilter extends PropertyFilter {
+    private static final class FilteringPropertyFilter extends PropertyFilter {
 		private final Set<Class<?>> rootClasses;
 		private final Collection<ProjectedPath> projectingPropertyPaths;
 
@@ -148,14 +148,14 @@ public abstract class PropertyFilter {
 		}
 	}
 
-	/**
-	 * A very loose coupling between a dot path and its (possible) owning type.
-	 * This is due to the fact that the original PropertyPath does throw an exception on creation when a property
-	 * is not found on the entity.
-	 * Since we are supporting also querying for base classes with properties coming from the inheriting classes,
-	 * this test on creation is too strict.
-	 */
-	public static class RelaxedPropertyPath {
+    /**
+     * A very loose coupling between a dot path and its (possible) owning type.
+     * This is due to the fact that the original PropertyPath does throw an exception on creation when a property
+     * is not found on the entity.
+     * Since we are supporting also querying for base classes with properties coming from the inheriting classes,
+     * this test on creation is too strict.
+     */
+    public static final class RelaxedPropertyPath {
 		private final String dotPath;
 		private final Class<?> type;
 

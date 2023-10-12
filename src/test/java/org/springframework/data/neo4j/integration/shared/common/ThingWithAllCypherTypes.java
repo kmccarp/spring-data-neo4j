@@ -36,7 +36,7 @@ import java.time.ZonedDateTime;
  */
 @SuppressWarnings("HiddenField")
 @Node("CypherTypes")
-public class ThingWithAllCypherTypes {
+public final class ThingWithAllCypherTypes {
 
 	@Id
 	@GeneratedValue
@@ -283,10 +283,7 @@ public class ThingWithAllCypherTypes {
 		}
 		final Object this$aZeroDuration = this.getAZeroDuration();
 		final Object other$aZeroDuration = other.getAZeroDuration();
-		if (this$aZeroDuration == null ? other$aZeroDuration != null : !this$aZeroDuration.equals(other$aZeroDuration)) {
-			return false;
-		}
-		return true;
+        return !(this$aZeroDuration == null ? other$aZeroDuration != null : !this$aZeroDuration.equals(other$aZeroDuration));
 	}
 
 	protected boolean canEqual(final Object other) {

@@ -84,10 +84,7 @@ public class JobRelationship {
 		}
 		final Object this$jobTitle = this.getJobTitle();
 		final Object other$jobTitle = other.getJobTitle();
-		if (this$jobTitle == null ? other$jobTitle != null : !this$jobTitle.equals(other$jobTitle)) {
-			return false;
-		}
-		return true;
+        return !(this$jobTitle == null ? other$jobTitle != null : !this$jobTitle.equals(other$jobTitle));
 	}
 
 	protected boolean canEqual(final Object other) {

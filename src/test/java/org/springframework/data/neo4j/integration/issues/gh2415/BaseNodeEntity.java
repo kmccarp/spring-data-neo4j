@@ -79,10 +79,7 @@ public class BaseNodeEntity {
 		}
 		final Object this$nodeId = this.getNodeId();
 		final Object other$nodeId = other.getNodeId();
-		if (this$nodeId == null ? other$nodeId != null : !this$nodeId.equals(other$nodeId)) {
-			return false;
-		}
-		return true;
+        return !(this$nodeId == null ? other$nodeId != null : !this$nodeId.equals(other$nodeId));
 	}
 
 	protected boolean canEqual(final Object other) {
@@ -106,7 +103,7 @@ public class BaseNodeEntity {
 	 * @param <C> needed c type
 	 * @param <B> needed b type
 	 */
-	public static abstract class BaseNodeEntityBuilder<C extends BaseNodeEntity, B extends BaseNodeEntityBuilder<C, B>> {
+	public abstract static class BaseNodeEntityBuilder<C extends BaseNodeEntity, B extends BaseNodeEntityBuilder<C, B>> {
 		private String nodeId;
 		private String name;
 

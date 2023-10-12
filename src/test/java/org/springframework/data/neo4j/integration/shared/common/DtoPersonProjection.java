@@ -62,10 +62,7 @@ public final class DtoPersonProjection {
 		}
 		final Object this$firstName = this.getFirstName();
 		final Object other$firstName = other.getFirstName();
-		if (this$firstName == null ? other$firstName != null : !this$firstName.equals(other$firstName)) {
-			return false;
-		}
-		return true;
+        return !(this$firstName == null ? other$firstName != null : !this$firstName.equals(other$firstName));
 	}
 
 	public int hashCode() {

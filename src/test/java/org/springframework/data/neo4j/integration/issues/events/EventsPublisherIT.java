@@ -162,10 +162,7 @@ class EventsPublisherIT {
 			}
 			final Object this$messageId = this.getMessageId();
 			final Object other$messageId = other.getMessageId();
-			if (this$messageId == null ? other$messageId != null : !this$messageId.equals(other$messageId)) {
-				return false;
-			}
-			return true;
+            return !(this$messageId == null ? other$messageId != null : !this$messageId.equals(other$messageId));
 		}
 
 		protected boolean canEqual(final Object other) {

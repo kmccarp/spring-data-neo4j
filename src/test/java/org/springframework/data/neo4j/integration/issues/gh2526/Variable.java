@@ -96,10 +96,7 @@ public final class Variable {
 		}
 		final Object this$variable = this.getVariable();
 		final Object other$variable = other.getVariable();
-		if (this$variable == null ? other$variable != null : !this$variable.equals(other$variable)) {
-			return false;
-		}
-		return true;
+        return !(this$variable == null ? other$variable != null : !this$variable.equals(other$variable));
 	}
 
 	public int hashCode() {

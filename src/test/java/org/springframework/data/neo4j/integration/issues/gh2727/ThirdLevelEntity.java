@@ -72,10 +72,7 @@ public class ThirdLevelEntity {
 		}
 		final Object this$id = this.getId();
 		final Object other$id = other.getId();
-		if (this$id == null ? other$id != null : !this$id.equals(other$id)) {
-			return false;
-		}
-		return true;
+        return !(this$id == null ? other$id != null : !this$id.equals(other$id));
 	}
 
 	protected boolean canEqual(final Object other) {
@@ -95,7 +92,7 @@ public class ThirdLevelEntity {
 	 * @param <C> needed c type
 	 * @param <B> needed b type
 	 */
-	public static abstract class ThirdLevelEntityBuilder<C extends ThirdLevelEntity, B extends ThirdLevelEntityBuilder<C, B>> {
+	public abstract static class ThirdLevelEntityBuilder<C extends ThirdLevelEntity, B extends ThirdLevelEntityBuilder<C, B>> {
 		private Long id;
 		private String someValue;
 

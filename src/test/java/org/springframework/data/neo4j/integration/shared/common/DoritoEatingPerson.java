@@ -126,10 +126,7 @@ public class DoritoEatingPerson {
 		}
 		final Object this$friends = this.getFriends();
 		final Object other$friends = other.getFriends();
-		if (this$friends == null ? other$friends != null : !this$friends.equals(other$friends)) {
-			return false;
-		}
-		return true;
+        return !(this$friends == null ? other$friends != null : !this$friends.equals(other$friends));
 	}
 
 	protected boolean canEqual(final Object other) {

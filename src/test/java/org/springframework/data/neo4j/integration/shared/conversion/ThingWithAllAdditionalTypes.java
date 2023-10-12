@@ -41,7 +41,7 @@ import org.springframework.data.neo4j.core.schema.Node;
  */
 @SuppressWarnings("HiddenField")
 @Node("AdditionalTypes")
-public class ThingWithAllAdditionalTypes {
+public final class ThingWithAllAdditionalTypes {
 
 	private ThingWithAllAdditionalTypes(Long id, boolean[] booleanArray, byte aByte, char aChar, char[] charArray, Date aDate, BigDecimal aBigDecimal, BigInteger aBigInteger, double[] doubleArray, float aFloat, float[] floatArray, int anInt, int[] intArray, Locale aLocale, long[] longArray, short aShort, short[] shortArray, Period aPeriod, Duration aDuration, String[] stringArray, List<String> listOfStrings, Set<String> setOfStrings, Instant anInstant, UUID aUUID, URL aURL, URI aURI, SomeEnum anEnum, SomeEnum[] anArrayOfEnums, List<Double> listOfDoubles, List<SomeEnum> aCollectionOfEnums, TimeZone aTimeZone, ZoneId aZoneId, Period aZeroPeriod, Duration aZeroDuration) {
 		this.id = id;
@@ -502,10 +502,7 @@ public class ThingWithAllAdditionalTypes {
 		}
 		final Object this$aZeroDuration = this.getAZeroDuration();
 		final Object other$aZeroDuration = other.getAZeroDuration();
-		if (this$aZeroDuration == null ? other$aZeroDuration != null : !this$aZeroDuration.equals(other$aZeroDuration)) {
-			return false;
-		}
-		return true;
+        return !(this$aZeroDuration == null ? other$aZeroDuration != null : !this$aZeroDuration.equals(other$aZeroDuration));
 	}
 
 	protected boolean canEqual(final Object other) {

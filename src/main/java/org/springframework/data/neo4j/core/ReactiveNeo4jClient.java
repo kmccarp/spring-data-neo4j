@@ -65,12 +65,12 @@ public interface ReactiveNeo4jClient {
 		return new Builder(driver);
 	}
 
-	/**
-	 * A builder for {@link ReactiveNeo4jClient reactive Neo4j clients}.
-	 */
-	@API(status = API.Status.STABLE, since = "6.2")
-	@SuppressWarnings("HiddenField")
-	class Builder {
+    /**
+     * A builder for {@link ReactiveNeo4jClient reactive Neo4j clients}.
+     */
+    @API(status = API.Status.STABLE, since = "6.2")
+    @SuppressWarnings("HiddenField")
+    final class Builder {
 
 		final Driver driver;
 

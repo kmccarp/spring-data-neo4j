@@ -99,11 +99,11 @@ public final class PreparedQuery<T> {
 		return this.queryFragmentsAndParameters;
 	}
 
-	/**
-	 * @param <CT> The concrete type of this build step.
-	 * @since 6.0
-	 */
-	public static class RequiredBuildStep<CT> {
+    /**
+     * @param <CT> The concrete type of this build step.
+     * @since 6.0
+     */
+    public static final class RequiredBuildStep<CT> {
 		private final Class<CT> resultType;
 
 		private RequiredBuildStep(Class<CT> resultType) {

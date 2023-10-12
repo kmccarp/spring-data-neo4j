@@ -115,15 +115,15 @@ public final class Neo4jMappingContext extends AbstractMappingContext<Neo4jPersi
 
 	private @Nullable AutowireCapableBeanFactory beanFactory;
 
-	private boolean strict = false;
+	private boolean strict;
 
 	private final Lazy<PersistentPropertyCharacteristicsProvider> propertyCharacteristicsProvider;
 
-	/**
-	 * A builder for creating custom instances of a {@link Neo4jMappingContext}.
-	 * @since 6.3.7
-	 */
-	public static class Builder {
+    /**
+     * A builder for creating custom instances of a {@link Neo4jMappingContext}.
+     * @since 6.3.7
+     */
+    public static final class Builder {
 
 		private Neo4jConversions neo4jConversions;
 
