@@ -741,10 +741,9 @@ public final class ReactiveNeo4jTemplate implements
 										return Tuples.of(newRelationshipIds, newRelatedNodeIds);
 									})
 									.one()
-									.map((t) -> {
+									.map(t ->
 										//noinspection unchecked
-										return (Tuple2<Collection<String>, Collection<String>>) t;
-									})
+										(Tuple2<Collection<String>, Collection<String>>) t)
 									.expand(iterateAndMapNextLevel(relationshipDescription, queryFragments, rootClass, PropertyPathWalkStep.empty()));
 						})
 						.then(Mono.fromSupplier(() -> new NodesAndRelationshipsByIdStatementProvider(rootNodeIds, processedRelationshipIds, processedNodeIds, queryFragments, elementIdOrIdFunction)));
@@ -795,10 +794,9 @@ public final class ReactiveNeo4jTemplate implements
 							return Tuples.of(newRelationshipIds, newRelatedNodeIds);
 						})
 						.one()
-						.map((t) -> {
+						.map(t ->
 							//noinspection unchecked
-							return (Tuple2<Collection<String>, Collection<String>>) t;
-						})
+							(Tuple2<Collection<String>, Collection<String>>) t)
 						.expand(object -> iterateAndMapNextLevel(relDe, queryFragments, rootClass, nextPathStep).apply(object));
 			});
 

@@ -68,10 +68,7 @@ public class TableAndColumnRelation {
 		}
 		final Object this$columnNode = this.getColumnNode();
 		final Object other$columnNode = other.getColumnNode();
-		if (this$columnNode == null ? other$columnNode != null : !this$columnNode.equals(other$columnNode)) {
-			return false;
-		}
-		return true;
+		return !(this$columnNode == null ? other$columnNode != null : !this$columnNode.equals(other$columnNode));
 	}
 
 	protected boolean canEqual(final Object other) {

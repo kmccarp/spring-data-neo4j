@@ -115,10 +115,7 @@ public class RangeRelationRO {
 		}
 		final Object this$targetSku = this.getTargetSku();
 		final Object other$targetSku = other.getTargetSku();
-		if (this$targetSku == null ? other$targetSku != null : !this$targetSku.equals(other$targetSku)) {
-			return false;
-		}
-		return true;
+		return !(this$targetSku == null ? other$targetSku != null : !this$targetSku.equals(other$targetSku));
 	}
 
 	protected boolean canEqual(final Object other) {

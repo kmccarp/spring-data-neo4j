@@ -877,43 +877,43 @@ class IssuesIT extends TestBase {
 
 	@Test
 	@Tag("GH-2572")
-	void allShouldFetchCorrectNumberOfChildNodes(@Autowired GH2572Repository GH2572Repository) {
-		List<GH2572Child> dogsForPerson = GH2572Repository.getDogsForPerson("GH2572Parent-2");
+	void allShouldFetchCorrectNumberOfChildNodes(@Autowired GH2572Repository gH2572Repository) {
+		List<GH2572Child> dogsForPerson = gH2572Repository.getDogsForPerson("GH2572Parent-2");
 		assertThat(dogsForPerson).hasSize(2);
 	}
 
 	@Test
 	@Tag("GH-2572")
-	void allShouldNotFailWithoutMatchingRootNodes(@Autowired GH2572Repository GH2572Repository) {
-		List<GH2572Child> dogsForPerson = GH2572Repository.getDogsForPerson("GH2572Parent-1");
+	void allShouldNotFailWithoutMatchingRootNodes(@Autowired GH2572Repository gH2572Repository) {
+		List<GH2572Child> dogsForPerson = gH2572Repository.getDogsForPerson("GH2572Parent-1");
 		assertThat(dogsForPerson).isEmpty();
 	}
 
 	@Test
 	@Tag("GH-2572")
-	void oneShouldFetchCorrectNumberOfChildNodes(@Autowired GH2572Repository GH2572Repository) {
-		Optional<GH2572Child> optionalChild = GH2572Repository.findOneDogForPerson("GH2572Parent-2");
+	void oneShouldFetchCorrectNumberOfChildNodes(@Autowired GH2572Repository gH2572Repository) {
+		Optional<GH2572Child> optionalChild = gH2572Repository.findOneDogForPerson("GH2572Parent-2");
 		assertThat(optionalChild).map(GH2572Child::getName).hasValue("a-pet");
 	}
 
 	@Test
 	@Tag("GH-2572")
-	void oneShouldNotFailWithoutMatchingRootNodes(@Autowired GH2572Repository GH2572Repository) {
-		Optional<GH2572Child> optionalChild = GH2572Repository.findOneDogForPerson("GH2572Parent-1");
+	void oneShouldNotFailWithoutMatchingRootNodes(@Autowired GH2572Repository gH2572Repository) {
+		Optional<GH2572Child> optionalChild = gH2572Repository.findOneDogForPerson("GH2572Parent-1");
 		assertThat(optionalChild).isEmpty();
 	}
 
 	@Test
 	@Tag("GH-2572")
-	void getOneShouldFetchCorrectNumberOfChildNodes(@Autowired GH2572Repository GH2572Repository) {
-		GH2572Child gh2572Child = GH2572Repository.getOneDogForPerson("GH2572Parent-2");
+	void getOneShouldFetchCorrectNumberOfChildNodes(@Autowired GH2572Repository gH2572Repository) {
+		GH2572Child gh2572Child = gH2572Repository.getOneDogForPerson("GH2572Parent-2");
 		assertThat(gh2572Child.getName()).isEqualTo("a-pet");
 	}
 
 	@Test
 	@Tag("GH-2572")
-	void getOneShouldNotFailWithoutMatchingRootNodes(@Autowired GH2572Repository GH2572Repository) {
-		GH2572Child gh2572Child = GH2572Repository.getOneDogForPerson("GH2572Parent-1");
+	void getOneShouldNotFailWithoutMatchingRootNodes(@Autowired GH2572Repository gH2572Repository) {
+		GH2572Child gh2572Child = gH2572Repository.getOneDogForPerson("GH2572Parent-1");
 		assertThat(gh2572Child).isNull();
 	}
 
@@ -1017,9 +1017,9 @@ class IssuesIT extends TestBase {
 		Company loadedAcme = companyRepository.findByName("ACME");
 
 		Developer loadedHarry = loadedAcme.getEmployees().stream()
-				.filter(e -> e instanceof Developer)
-				.map(e -> (Developer) e)
-				.filter(developer -> developer.getName().equals("Harry"))
+				.filter(Developer.class::isInstance)
+				.map(Developer.class::cast)
+				.filter(developer -> "Harry".equals(developer.getName()))
 				.findFirst().get();
 
 		List<LanguageRelationship> programmingLanguages = loadedHarry.getProgrammingLanguages();

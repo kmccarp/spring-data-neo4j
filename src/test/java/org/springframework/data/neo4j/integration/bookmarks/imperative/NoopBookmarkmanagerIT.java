@@ -125,7 +125,7 @@ public class NoopBookmarkmanagerIT {
 
 			CompletableFuture<List<String>> completableFutureCompletableFuture = personRepository.findMatchingNames(namePattern)
 					.thenCompose(names -> {
-						List<String> result = Collections.synchronizedList(new ArrayList<String>());
+						List<String> result = Collections.synchronizedList(new ArrayList<>());
 						var futures = names.stream().map(personRepository::getPersonMovies)
 								.map(cf -> cf.thenAccept(result::addAll))
 								.toArray(CompletableFuture[]::new);
